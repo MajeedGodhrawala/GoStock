@@ -88,9 +88,7 @@
                                                     class="d-flex flex-column justify-content-center"
                                                 >
                                                     <h6 class="mb-0 text-sm">
-                                                        {{
-                                                            permission.display_name
-                                                        }}
+                                                        {{ permission.display_name }}
                                                     </h6>
                                                 </div>
                                             </tr>
@@ -101,7 +99,8 @@
                                             ) in data.roleData"
                                             :key="index"
                                         >
-                                    {{ role.display_name }}</td>
+                                            {{ role.display_name }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
