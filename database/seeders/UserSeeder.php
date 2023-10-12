@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        User::create([
             'role_id' => 1,
             'first_name' => 'Admin',
             'last_name' => 'Admin',
@@ -25,7 +26,7 @@ class UserSeeder extends Seeder
             'accept_privacy' => '1',
             'isactive' => '1',
         ]);
-        DB::table('users')->insert([
+        User::create([
             'role_id' => 2,
             'first_name' => 'user1',
             'last_name' => 'user1',
@@ -37,7 +38,7 @@ class UserSeeder extends Seeder
             'accept_privacy' => '1',
             'isactive' => '1',
         ]);
-        DB::table('users')->insert([
+        User::create([
             'role_id' => 2,
             'first_name' => 'user2',
             'last_name' => 'user2',

@@ -54,7 +54,7 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach($datas as $data ){
-            DB::table('permissions')->insert($data);
+            Permission::create($data);
         }
         
         $role_permissions = [];

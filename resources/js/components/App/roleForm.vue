@@ -115,7 +115,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted, defineExpose, defineEmits } from "vue";
+import { reactive, ref, onMounted } from "vue";
 
 const data = reactive({
     formData: {
