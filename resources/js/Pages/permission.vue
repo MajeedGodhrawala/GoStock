@@ -33,7 +33,7 @@
                             class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
                         >
                             <h6 class="text-white text-capitalize ps-3">
-                                Authors table
+                                Permission table
                             </h6>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                                         <th
                                             v-for="(
                                                 role, index
-                                            ) in data.roleData"
+                                            ) in data.roles"
                                             :key="role.id"
                                             class="text-uppercase text-secondary text-xs font-weight-bolder opacity-9 ps-2"
                                         >
@@ -61,49 +61,53 @@
                                 <tbody>
                                     <tr
                                         v-for="(
-                                            permissions, category_name
-                                        ) in data.permissionData"
-                                        :key="category_name"
+                                            permissions, index
+                                        ) in data.role_permissions"
+                                        :key="index"
                                     >
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div
-                                                    class="d-flex flex-column justify-content-center"
-                                                >
-                                                    <span
-                                                        class="badge badge-sm bg-gradient-secondary"
-                                                        >{{
-                                                            category_name
-                                                        }}</span
-                                                    >
-                                                </div>
-                                            </div>
-                                            <tr
-                                                v-for="(
-                                                    permission, index
-                                                ) in permissions"
-                                                :key="index"
-                                            >
-                                                <div
-                                                    class="d-flex flex-column justify-content-center"
-                                                >
-                                                    <h6 class="mb-0 text-sm">
-                                                        {{ permission.display_name }}
-                                                    </h6>
-                                                </div>
-                                            </tr>
-                                        </td>
-                                        <td
+                                            <b>{{ index }}</b>
+                                            <div
                                             v-for="(
-                                                role, index
-                                            ) in data.roleData"
+                                            permission, index
+                                            ) in permissions"
                                             :key="index"
+                                            >
+                                                {{ permission.display_name }}
+                                        </div>
+                                        </td>
+                                        <td 
+                                        v-for="(
+                                                role, index
+                                            ) in data.roles"
+                                            :key="role.id"
                                         >
-                                            {{ role.display_name }}
+                                            <div
+                                            v-for="(
+                                            permission, index
+                                            ) in permissions"
+                                            :key="index"
+                                            >
+                                            <div 
+                                            v-for="(
+                                            role, index
+                                            ) in permission.roles"
+                                            :key="index"
+                                            >
+                                            {{ role.has_permission }}
+                                            
+                                            </div>
+                                            <!-- <div>
+                                                <i class="fa-solid fa-check"></i> 
+                                            </div>
+                                            <div>
+                                                <i class="fa-solid fa-xmark"></i> 
+                                            </div> -->
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table> 
                         </div>
                     </div>
                 </div>
@@ -116,19 +120,21 @@
 import Layout from "@/components/App/Layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 
-import { reactive } from "vue";
+import { reactive , onMounted } from "vue";
 
 const data = reactive({
-    roleData: props.roles,
-    permissionData: props.permissions,
-    role_permissionData: props.role_permisssion,
+    roles : props.roles,
+    role_permissions: props.role_permissions,
     showPermission: false,
     errors: {},
 });
 
 const props = defineProps({
-    roles: Object,
-    permissions: Object,
-    role_permisssion: Object,
+    roles:Object,
+    role_permissions: Object,
+});
+
+onMounted(() => {
+    console.log(data.role_permissions);
 });
 </script>

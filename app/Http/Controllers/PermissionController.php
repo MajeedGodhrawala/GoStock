@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PHPUnit\Event\TestSuite\Skipped;
@@ -16,75 +17,44 @@ class PermissionController extends Controller
 {
     public function permission(){
 
-        // $permissions = DB::table('permissions')->get()->groupBy('category');
-        $permissions = Permission::with('roles')->get();
-        // $roles = Role::all();
-        // $role_permissions = DB::table('role_permissions')->get();
+        $permissions = Permission::orderBy('category')->get();
+        $roles = Role::with('permissions')->get();
 
-        // $user = User::first();
-        // dd($user->role->name);
-        
-        // foreach ($permissions as $permission){ 
-        //     foreach($roles as $role){
-        //         foreach($role_permissions as $role_permission){
-        //             if($role_permission->permission_id == $permission->id){
-        //                 if($role->id == $role_permission->role_id){
-        //                     $role_array[$role->name] = true;
-        //                     break;
-        //                 } else {
-        //                     $role_array[$role->name] = false;
-        //                 }
-        //             } 
-        //             else{
-        //                 $role_array[$role->name] = false;
-        //             }
-        //         }
-        //         $permission['roles'] = $role_array;
-        //     }
-        // }
-        // dd($permissions->toArray());
+        $role_permission_array = collect();
+        foreach($permissions as $permission){
+            $role_permission_array->push([
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'display_name' => $permission->display_name,
+                'category' => $permission->category,
+                'roles' => $this->getPermissionByRoles($permission->id,$roles)
+            ]);
+        }
 
-            // $permissions->each(function ($permission) use ($permissions){
-            //     $permission->roles->each(function ($role) use ($permission){
-            //         if($permission->id == $role->pivot->permission_id){
-            //             if($role->id == $role->pivot->role_id){
-            //                 // $role_array[$role->name] = true;
-            //             } else {
-            //                 // $role_array[$role->name] = false;
-            //             }
-            //         } else {
-            //             // $role_array[$role->name] = false;
-            //         }
-            //         // $permissions['roles'] = $role_array;
-            //     });
-                
-            // });
+        // dd($role_permission_array->groupBy('category'));
+        $role_permissions = $role_permission_array->groupBy('category');
 
-            foreach($permissions as $permission){
-                $role_array = [];
-                foreach($permission->roles as $permission_role){
-                    if($permission_role->pivot->permission_id == $permission->id && $permission_role->id == $permission_role->pivot->role_id){
-                        dump(1);
-                        $role_array[$permission_role->name] = true;
-                    } else {
-                        dump(1);
-                        $role_array[$permission_role->name] = false;
-                    }
+        // return Inertia::render("permission" , ['roles' => Role::all(),'permissions' => $permissions, 'role_permisssion' => $role_permission ]);
+        return Inertia::render("permission" , ['roles' => Role::all(),'role_permissions' => $role_permissions]);
 
-                    dump($role_array);
-                }
+    }
 
-                dump($role_array);
-                $permission['roles'] = $role_array;
-            }
+    public function getPermissionByRoles(float $permission_id,Collection $roles): array
+    {
+        $roles_array = [];
 
+        foreach($roles as $role){
+            $exists = $role->permissions->where('id','=',$permission_id)->first(); 
 
-            
-        dd($permissions);
+            array_push($roles_array,[
+                'id' => $role->id,
+                'name' => $role->name,
+                'display_name' => $role->display_name,
+                'has_permission' => $exists ? true : false,
+            ]);
 
+        }
 
-        $role_permission = DB::table('role_permissions')->get();
-        return Inertia::render("permission" , ['roles' => Role::all(),'permissions' => $permissions, 'role_permisssion' => $role_permission ]);
-
+        return $roles_array;
     }
 }
