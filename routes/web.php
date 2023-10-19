@@ -55,6 +55,7 @@ Route::post('getBrokerData',[BrokerController::class,'getAllBroker']);
 Route::post('createOrUpdate/{role?}',[RoleController::class,'createOrUpdate']);
 Route::post('delete/{role}',[RoleController::class,'destroy']);
 Route::post('get-role-data',[RoleController::class,'getAllRole']);
+Route::post('update-role_permission',[PermissionController::class,'updateRolePermission']);
 
 //
 

@@ -167,12 +167,36 @@ onMounted(() => {
 
 function update_permission(){
     update_permission_btn()
+    let update_array = {};
     var permissions = document.getElementsByName('permission_checkbox');
-    Object.entries(permissions).forEach(([key, element]) => {
-    console.log(element);
-        
-    })  
-    // console.log(data.role_permissions.Broker[0].roles);
+
+    Object.entries(data.roles).forEach(([key, role]) => {
+        let permission_id_array = [];
+        Object.entries(permissions).forEach(([key, element]) => {
+            if(element.checked && element.id == role.id){
+                permission_id_array.push(element.value);
+            }
+        });
+        update_array[role.id] = permission_id_array;
+    });
+    axios
+        .post('update-role_permission', {'role_permission' : update_array})
+        .then(function (response) {
+            if (response.data.updated) {
+                data.role_permissions = response.data.role_permissions;
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: response.data.updated,
+                    showConfirmButton: false,
+                    timer: 900,
+                });
+            }
+        })
+        .catch(function (error) {
+            data.errors = error.response.data.errors;
+        });
+
 }
 
 function update_permission_btn(){

@@ -16,7 +16,11 @@ use function Termwind\render;
 class PermissionController extends Controller
 {
     public function permission(){
+        return Inertia::render("permission" , ['roles' => Role::all(),'role_permissions' => $this->rolePermission()]);
+    }
 
+    public function rolePermission() : object
+    {
         $permissions = Permission::orderBy('category')->get();
         $roles = Role::with('permissions')->get();
 
@@ -33,10 +37,7 @@ class PermissionController extends Controller
 
         // dd($role_permission_array->groupBy('category'));
         $role_permissions = $role_permission_array->groupBy('category');
-
-        // return Inertia::render("permission" , ['roles' => Role::all(),'permissions' => $permissions, 'role_permisssion' => $role_permission ]);
-        return Inertia::render("permission" , ['roles' => Role::all(),'role_permissions' => $role_permissions]);
-
+        return $role_permissions;
     }
 
     public function getPermissionByRoles(float $permission_id,Collection $roles): array
@@ -56,5 +57,14 @@ class PermissionController extends Controller
         }
 
         return $roles_array;
+    }
+
+    public function updateRolePermission(Request $datas){
+        foreach($datas->role_permission as $role_id=>$data){
+            $role = Role::with('permissions')->find($role_id);
+            $role->permissions()->sync($data);
+        }
+
+        return response()->json(['updated' => 'Permission Has Been Updated','role_permissions' => $this->rolePermission()]);
     }
 }
