@@ -865,10 +865,20 @@ function deleteBrokerData(id, broker_name) {
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    if(error.message){
+                        errorAlert(error.message);
+                    }
                 });
         }
     });
+}
+
+function errorAlert(error){
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+    })
 }
 
 function addNewBroker() {

@@ -20,8 +20,6 @@ class RoleController extends Controller
         } else {
             Role::create($request->requestedField());
         }
-        // $role = new Role();
-        // $role->fill($request->requestedField())->save();
         return response()->json([
             'success' => $request->display_name.' Is '.($request->id ? 'Updated' : 'Added')]);
     } 

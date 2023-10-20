@@ -160,8 +160,8 @@ function editRoleData(RoleData) {
 
 function submitForm() {
     let url = data.formData.id
-        ? "createOrUpdate/" + data.formData.id
-        : "createOrUpdate";
+        ? "roleCreateOrUpdate/" + data.formData.id
+        : "roleCreateOrUpdate";
 
     axios
         .post(url, data.formData)
@@ -179,9 +179,20 @@ function submitForm() {
             }
         })
         .catch(function (error) {
-            // handle error
-            data.errors = error.response.data.errors;
+            if(error.response.data.errors){
+                data.errors = error.response.data.errors;
+            } else if(error.message){
+                errorAlert(error.message)
+            }
         });
+}
+
+function errorAlert(error){
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+    })
 }
 
 defineExpose({

@@ -97,39 +97,37 @@
                                             ) in permissions"
                                             :key="index"
                                             >
-                                            <template 
-                                            v-for="(
-                                            permission_role, index
-                                            ) in permission.roles"
-                                            :key="index"
-                                            >
-                                            <div v-if="permission_role.id == role.id">
-                                                <template v-if="data.update_permission">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input"
-                                                             name="permission_checkbox" 
-                                                             type="checkbox" 
-                                                             :value=permission.id 
-                                                             :id=permission_role.id 
-                                                             :checked="permission_role.has_permission" >
-                                                        </div>
-                                                </template>
-                                                <template v-else >
-                                                    <template v-if="permission_role.has_permission">
-                                                        <i class="fa-solid fa-check text-success"></i> 
+                                                <template 
+                                                v-for="(
+                                                permission_role, index
+                                                ) in permission.roles"
+                                                :key="index"
+                                                >
+                                                <div v-if="permission_role.id == role.id">
+                                                    <template v-if="data.update_permission">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input"
+                                                                name="permission_checkbox" 
+                                                                type="checkbox" 
+                                                                :value=permission.id 
+                                                                :id=permission_role.id 
+                                                                :checked="permission_role.has_permission" >
+                                                            </div>
                                                     </template>
-                                                    <template v-else>
-                                                        <i class="fa-solid fa-xmark text-danger"></i> 
+                                                    <template v-else >
+                                                        <template v-if="permission_role.has_permission">
+                                                            <i class="fa-solid fa-check text-success"></i> 
+                                                        </template>
+                                                        <template v-else>
+                                                            <i class="fa-solid fa-xmark text-danger"></i> 
+                                                        </template>
                                                     </template>
+                                                </div>
                                                 </template>
-                                            </div>
-                                            </template>
-                                            
                                             </template>
                                         </td>
                                     </tr>
                                 </tbody>
-                                
                             </table>
                             <div v-if="data.update_permission" class="d-flex justify-content-end me-3">
                                 <button type="button" class="btn btn-info" @click="update_permission">Save</button>
@@ -146,7 +144,7 @@
 import Layout from "@/components/App/Layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 
-import { reactive , onMounted } from "vue";
+import { reactive } from "vue";
 
 const data = reactive({
     roles : props.roles,
@@ -159,10 +157,6 @@ const data = reactive({
 const props = defineProps({
     roles:Object,
     role_permissions: Object,
-});
-
-onMounted(() => {
-    // console.log(data.role_permissions);
 });
 
 function update_permission(){
@@ -198,6 +192,8 @@ function update_permission(){
         });
 
 }
+
+
 
 function update_permission_btn(){
     data.update_permission = !data.update_permission;

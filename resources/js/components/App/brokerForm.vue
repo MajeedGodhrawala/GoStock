@@ -213,47 +213,40 @@ function editBrokerData(brokerData) {
 }
 
 function submitForm() {
-    if (data.formData.id) {
-        axios
-            .post("editBroker", data.formData)
-            .then(function (response) {
-                if (response.data.updated) {
-                    hideModel();
-                    emit("getBrokerData");
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: response.data.updated,
-                        showConfirmButton: false,
-                        timer: 900,
-                    });
-                }
-            })
-            .catch(function (error) {
-                // handle error
+    let url = data.formData.id
+        ? "brokerCreateOrUpdate/" + data.formData.id
+        : "brokerCreateOrUpdate";
+
+    axios
+        .post(url, data.formData)
+        .then(function (response) {
+            if (response.data.success) {
+                hideModel();
+                emit("getBrokerData");
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: response.data.success,
+                    showConfirmButton: false,
+                    timer: 900,
+                });
+            }
+        })
+        .catch(function (error) {
+            if(error.response.data.errors){
                 data.errors = error.response.data.errors;
-            });
-    } else {
-        axios
-            .post("addBroker", data.formData)
-            .then(function (response) {
-                if (response.data.success) {
-                    hideModel();
-                    emit("getBrokerData");
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: response.data.success,
-                        showConfirmButton: false,
-                        timer: 900,
-                    });
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                data.errors = error.response.data.errors;
-            });
-    }
+            } else if(error.message){
+                errorAlert(error.message)
+            }
+        });
+}
+
+function errorAlert(error){
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        })
 }
 
 defineExpose({

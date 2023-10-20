@@ -41,21 +41,21 @@ Route::middleware('auth')->group(function() {
     Route::get('permission',[PermissionController::class,'permission']);
     Route::get('role',[RoleController::class,'role']);
 });
+// 
 
 Route::post('addUser',[GuestController::class,'createUser']);
 Route::post('editProfile',[ProfileController::class,'update']);
 
 //Broker
-Route::post('addBroker',[BrokerController::class,'create']);
-Route::post('editBroker',[BrokerController::class,'update']);
+// Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate']);
 Route::post('deleteBrokerData/{broker}',[BrokerController::class,'destroy']);
 Route::post('getBrokerData',[BrokerController::class,'getAllBroker']);
+// 
 
 //Role
-Route::post('createOrUpdate/{role?}',[RoleController::class,'createOrUpdate']);
+Route::post('roleCreateOrUpdate/{role?}',[RoleController::class,'createOrUpdate']);
 Route::post('delete/{role}',[RoleController::class,'destroy']);
 Route::post('get-role-data',[RoleController::class,'getAllRole']);
 Route::post('update-role_permission',[PermissionController::class,'updateRolePermission']);
-
 //
-
+Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate'])->middleware('role_permission:edit_broker|add_broker');
