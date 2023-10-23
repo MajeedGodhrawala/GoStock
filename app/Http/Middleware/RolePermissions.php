@@ -9,6 +9,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 class RolePermissions
@@ -25,11 +26,6 @@ class RolePermissions
         foreach(explode('|',$permissions) as $permission){
             array_push($permission_array,$permission);
         }
-        if($request->id){
-            dd("GetId");
-        } else {
-            dd("NotGetId");
-        }
         $user = Auth::user();
         // $user = User::find(Auth::user()->id);
         $user->load('role.permissions');
@@ -37,7 +33,9 @@ class RolePermissions
         if($has_permission){
             return $next($request);
         } else{
-            return redirect()->route(404);
+            // return redirect()->route('unauthenticatPage');
+            
+            // // return redirect()->route(404);
         }     
     }
 }

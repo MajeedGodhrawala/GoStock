@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\UserFormRequest;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
-
+use Inertia\Inertia;
 
 class GuestController extends Controller
 {
@@ -25,6 +27,10 @@ class GuestController extends Controller
         } else {
         return view('Login_Register.Register');
         }
+    }
+    
+    public function unauthenticatPage(){
+        return Inertia::render('unauthenticatPage');
     }
 
     public function createUser(UserFormRequest $request){
@@ -51,8 +57,11 @@ class GuestController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if($user){
+                $user->load('role.permissions');
+                $user_permissions = $user->role->permissions->pluck('name')->all();
                 return response()->json([
-                    'success' => $user->first_name.' '.$user->last_name
+                    'success' => $user->first_name.' '.$user->last_name,
+                    'user_permissions' => $user_permissions,
                 ]);
             }
         } else {

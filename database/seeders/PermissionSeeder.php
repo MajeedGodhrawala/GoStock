@@ -17,19 +17,9 @@ class PermissionSeeder extends Seeder
     {
         $datas = [
             [
-                'name' => 'view_user',
-                'display_name' =>  'View User',
-                'category' => 'User'
-            ],
-            [
-                'name' => 'view_profile',
-                'display_name' =>  'View Profile',
-                'category' => 'Profile'
-            ],
-            [
-                'name' => 'edit_profile',
-                'display_name' =>  'Edit Profile',
-                'category' => 'Profile'
+                'name' => 'view_dashbord',
+                'display_name' =>  'View Dashboard',
+                'category' => 'Dashboard'
             ],
             [
                 'name' => 'view_broker',
@@ -42,14 +32,54 @@ class PermissionSeeder extends Seeder
                 'category' => 'Broker'
             ],
             [
-                'name' => 'edit_broker',
-                'display_name' =>  'edit Broker',
+                'name' => 'delete_broker',
+                'display_name' =>  'Delete Broker',
                 'category' => 'Broker'
             ],
             [
-                'name' => 'edit_temp',
-                'display_name' =>  'edit Temp',
-                'category' => 'Temp'
+                'name' => 'edit_broker',
+                'display_name' =>  'Edit Broker',
+                'category' => 'Broker'
+            ],
+            [
+                'name' => 'view_profile',
+                'display_name' =>  'View Profile',
+                'category' => 'Profile'
+            ],
+            [
+                'name' => 'edit_profile',
+                'display_name' =>  'Edit Profile',
+                'category' => 'Profile'
+            ],
+            [
+                'name' => 'view_role',
+                'display_name' =>  'View Role',
+                'category' => 'Role'
+            ],
+            [
+                'name' => 'add_role',
+                'display_name' =>  'Add Role',
+                'category' => 'Role'
+            ],
+            [
+                'name' => 'delete_role',
+                'display_name' =>  'delete Role',
+                'category' => 'Role'
+            ],
+            [
+                'name' => 'edit_role',
+                'display_name' =>  'Edit Role',
+                'category' => 'Role'
+            ],
+             [
+                'name' => 'view_permission',
+                'display_name' =>  'View Permission',
+                'category' => 'Permission'
+            ],
+            [
+                'name' => 'update_permission',
+                'display_name' =>  'Update Permission',
+                'category' => 'Permission'
             ],
         ];
 

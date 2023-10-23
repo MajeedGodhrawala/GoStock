@@ -13,7 +13,9 @@
                                 v-if="data.errors.hasOwnProperty('login_error')"
                             >
                                 <strong class="text-danger opacity-7">
-                                    <i class="fa fa-ban opacity-10  text-danger me-1"></i>
+                                    <i
+                                        class="fa fa-ban opacity-10 text-danger me-1"
+                                    ></i>
                                     {{ data.errors.login_error }}!
                                 </strong>
                             </div>
@@ -161,6 +163,12 @@ function submitForm() {
                 data.errors = response.data;
             }
             if (response.data.success) {
+                if (response.data.user_permissions) {
+                    sessionStorage.setItem(
+                        "user_permissions",
+                        JSON.stringify(response.data.user_permissions)
+                    );
+                }
                 window.location.href = "dashboard";
             }
         })

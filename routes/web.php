@@ -30,6 +30,7 @@ Route::get('register',[GuestController::class,'register']);
 
 Route::post('loginUser',[GuestController::class,'loginUser']);
 Route::get('logout',[GuestController::class,'logout']);
+Route::get('unauthenticatPage',[GuestController::class,'unauthenticatPage'])->name('unauthenticatPage');
 
 //
 

@@ -27,7 +27,7 @@
         <hr class="horizontal light mt-0 mb-2" />
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item" v-if="has_permission('view_dashbord')">
                     <Link
                         class="nav-link text-white active bg-gradient-primary"
                         id="Link_id"
@@ -41,7 +41,7 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </Link>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="has_permission('view_broker')">
                     <Link
                         class="nav-link text-white"
                         id="Link_id"
@@ -50,19 +50,22 @@
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
-                            <i class="material-icons opacity-10">receipt_long</i>
+                            <i class="material-icons opacity-10"
+                                >receipt_long</i
+                            >
                         </div>
                         <span class="nav-link-text ms-1">broker</span>
                     </Link>
                 </li>
                 <li class="nav-item">
-                    <Link class="nav-link text-white" href="../pages/billing.html">
+                    <Link
+                        class="nav-link text-white"
+                        href="../pages/billing.html"
+                    >
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
-                            <i class="material-icons opacity-10"
-                                >table_view</i
-                            >
+                            <i class="material-icons opacity-10">table_view</i>
                         </div>
                         <span class="nav-link-text ms-1">Billing</span>
                     </Link>
@@ -71,14 +74,16 @@
                     <Link
                         class="nav-link text-white"
                         id="Link_id"
-                        href="../pages/virtual-reality.html"
+                        href="unauthenticatPage"
                     >
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
                             <i class="material-icons opacity-10">view_in_ar</i>
                         </div>
-                        <span class="nav-link-text ms-1">Virtual Reality</span>
+                        <span class="nav-link-text ms-1"
+                            >unauthenticatPage</span
+                        >
                     </Link>
                 </li>
                 <li class="nav-item">
@@ -120,7 +125,7 @@
                         Account pages
                     </h6>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="has_permission('view_profile')">
                     <Link
                         class="nav-link text-white"
                         id="Link_id"
@@ -129,21 +134,17 @@
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
-                            <i class="material-icons opacity-10">person</i>
+                            <i class="fa-solid fa-user opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Profile</span>
                     </Link>
                 </li>
                 <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        id="Link_id"
-                        href="role"
-                    >
+                    <Link class="nav-link text-white" id="Link_id" href="role">
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
-                            <i class="material-icons opacity-10">login</i>
+                            <i class="fa-solid fa-user-plus opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Role</span>
                     </Link>
@@ -157,7 +158,7 @@
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
                         >
-                            <i class="material-icons opacity-10">login</i>
+                            <i class="fa-solid fa-user-lock opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Permission</span>
                     </Link>
@@ -198,6 +199,9 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
 import { onMounted, onUpdated } from "vue";
+// import { has_permission } from "../appExternal.js";
+// import { has_permission } from "appExternal.js";
+
 
 onMounted(() => {
     var links = document.querySelectorAll("#Link_id");

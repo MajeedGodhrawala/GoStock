@@ -7,6 +7,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PHPUnit\Event\TestSuite\Skipped;
@@ -63,8 +64,12 @@ class PermissionController extends Controller
         foreach($datas->role_permission as $role_id=>$data){
             $role = Role::with('permissions')->find($role_id);
             $role->permissions()->sync($data);
+            $user = Auth::user();
+            $user->load('role.permissions');
+            $user_permissions = $user->role->permissions->pluck('name')->all();
         }
 
-        return response()->json(['updated' => 'Permission Has Been Updated','role_permissions' => $this->rolePermission()]);
+        return response()->json(['updated' => 'Permission Has Been Updated',
+        'role_permissions' => $this->rolePermission(),'user_permissions' => $user_permissions,]);
     }
 }

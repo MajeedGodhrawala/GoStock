@@ -160,6 +160,7 @@
 </template>
 <script setup>
 import { reactive, ref, onMounted } from "vue";
+import { router } from "@inertiajs/vue3";
 
 const data = reactive({
     formData: {
@@ -233,20 +234,21 @@ function submitForm() {
             }
         })
         .catch(function (error) {
-            if(error.response.data.errors){
+            if (error.response.data.errors) {
                 data.errors = error.response.data.errors;
-            } else if(error.message){
-                errorAlert(error.message)
+            } else if (error.message) {
+                errorAlert(error.message);
+                // router.visit("/unauthenticatPage");
             }
         });
 }
 
-function errorAlert(error){
+function errorAlert(error) {
     Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
+        icon: "error",
+        title: "Oops...",
         text: error,
-        })
+    });
 }
 
 defineExpose({

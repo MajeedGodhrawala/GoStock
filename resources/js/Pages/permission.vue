@@ -38,8 +38,15 @@
                                         Permission table
                                     </h6>
                                 </div>
-                                <div class="col-6 d-flex justify-content-end" v-if="!data.update_permission">
-                                    <button type="button" class="btn btn-info" @click=update_permission_btn>
+                                <div
+                                    class="col-6 d-flex justify-content-end"
+                                    v-if="!data.update_permission"
+                                >
+                                    <button
+                                        type="button"
+                                        class="btn btn-info"
+                                        @click="update_permission_btn"
+                                    >
                                         Update
                                     </button>
                                 </div>
@@ -57,9 +64,7 @@
                                             Permission
                                         </th>
                                         <th
-                                            v-for="(
-                                                role, index
-                                            ) in data.roles"
+                                            v-for="(role, index) in data.roles"
                                             :key="role.id"
                                             class="text-uppercase text-secondary text-xs font-weight-bolder opacity-9 ps-2"
                                         >
@@ -77,61 +82,95 @@
                                         <td>
                                             <b>{{ category_name }}</b>
                                             <div
-                                            v-for="(
-                                            permission, index
-                                            ) in permissions"
-                                            :key="index"
+                                                v-for="(
+                                                    permission, index
+                                                ) in permissions"
+                                                :key="index"
                                             >
                                                 {{ permission.display_name }}
-                                        </div>
+                                            </div>
                                         </td>
-                                        <td 
-                                        v-for="(
-                                                role, index
-                                            ) in data.roles"
+                                        <td
+                                            v-for="(role, index) in data.roles"
                                             :key="role.id"
                                         >
                                             <template
-                                            v-for="(
-                                            permission, index
-                                            ) in permissions"
-                                            :key="index"
-                                            >
-                                                <template 
                                                 v-for="(
-                                                permission_role, index
-                                                ) in permission.roles"
+                                                    permission, index
+                                                ) in permissions"
                                                 :key="index"
+                                            >
+                                                <template
+                                                    v-for="(
+                                                        permission_role, index
+                                                    ) in permission.roles"
+                                                    :key="index"
                                                 >
-                                                <div v-if="permission_role.id == role.id">
-                                                    <template v-if="data.update_permission">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input"
-                                                                name="permission_checkbox" 
-                                                                type="checkbox" 
-                                                                :value=permission.id 
-                                                                :id=permission_role.id 
-                                                                :checked="permission_role.has_permission" >
+                                                    <div
+                                                        v-if="
+                                                            permission_role.id ==
+                                                            role.id
+                                                        "
+                                                    >
+                                                        <template
+                                                            v-if="
+                                                                data.update_permission
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="form-check"
+                                                            >
+                                                                <input
+                                                                    class="form-check-input"
+                                                                    name="permission_checkbox"
+                                                                    type="checkbox"
+                                                                    :value="
+                                                                        permission.id
+                                                                    "
+                                                                    :id="
+                                                                        permission_role.id
+                                                                    "
+                                                                    :checked="
+                                                                        permission_role.has_permission
+                                                                    "
+                                                                />
                                                             </div>
-                                                    </template>
-                                                    <template v-else >
-                                                        <template v-if="permission_role.has_permission">
-                                                            <i class="fa-solid fa-check text-success"></i> 
                                                         </template>
                                                         <template v-else>
-                                                            <i class="fa-solid fa-xmark text-danger"></i> 
+                                                            <template
+                                                                v-if="
+                                                                    permission_role.has_permission
+                                                                "
+                                                            >
+                                                                <i
+                                                                    class="fa-solid fa-check text-success"
+                                                                ></i>
+                                                            </template>
+                                                            <template v-else>
+                                                                <i
+                                                                    class="fa-solid fa-xmark text-danger"
+                                                                ></i>
+                                                            </template>
                                                         </template>
-                                                    </template>
-                                                </div>
+                                                    </div>
                                                 </template>
                                             </template>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <div v-if="data.update_permission" class="d-flex justify-content-end me-3">
-                                <button type="button" class="btn btn-info" @click="update_permission">Save</button>
-                            </div> 
+                            <div
+                                v-if="data.update_permission"
+                                class="d-flex justify-content-end me-3"
+                            >
+                                <button
+                                    type="button"
+                                    class="btn btn-info"
+                                    @click="update_permission"
+                                >
+                                    Save
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +186,7 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { reactive } from "vue";
 
 const data = reactive({
-    roles : props.roles,
+    roles: props.roles,
     role_permissions: props.role_permissions,
     update_permission: false,
     permission_object: Array,
@@ -155,29 +194,35 @@ const data = reactive({
 });
 
 const props = defineProps({
-    roles:Object,
+    roles: Object,
     role_permissions: Object,
 });
 
-function update_permission(){
-    update_permission_btn()
+function update_permission() {
+    update_permission_btn();
     let update_array = {};
-    var permissions = document.getElementsByName('permission_checkbox');
+    var permissions = document.getElementsByName("permission_checkbox");
 
     Object.entries(data.roles).forEach(([key, role]) => {
         let permission_id_array = [];
         Object.entries(permissions).forEach(([key, element]) => {
-            if(element.checked && element.id == role.id){
+            if (element.checked && element.id == role.id) {
                 permission_id_array.push(element.value);
             }
         });
         update_array[role.id] = permission_id_array;
     });
     axios
-        .post('update-role_permission', {'role_permission' : update_array})
+        .post("update-role_permission", { role_permission: update_array })
         .then(function (response) {
             if (response.data.updated) {
                 data.role_permissions = response.data.role_permissions;
+                if (response.data.user_permissions) {
+                    sessionStorage.setItem(
+                        "user_permissions",
+                        JSON.stringify(response.data.user_permissions)
+                    );
+                }
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
@@ -190,12 +235,9 @@ function update_permission(){
         .catch(function (error) {
             data.errors = error.response.data.errors;
         });
-
 }
 
-
-
-function update_permission_btn(){
+function update_permission_btn() {
     data.update_permission = !data.update_permission;
 }
 </script>
