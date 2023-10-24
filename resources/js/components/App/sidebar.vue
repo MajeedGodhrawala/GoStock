@@ -27,7 +27,7 @@
         <hr class="horizontal light mt-0 mb-2" />
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
-                <li class="nav-item" v-if="has_permission('view_dashbord')">
+                <li class="nav-item">
                     <Link
                         class="nav-link text-white active bg-gradient-primary"
                         id="Link_id"
@@ -139,7 +139,7 @@
                         <span class="nav-link-text ms-1">Profile</span>
                     </Link>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="has_permission('view_role')">
                     <Link class="nav-link text-white" id="Link_id" href="role">
                         <div
                             class="text-white text-center me-2 d-flex align-items-center justify-content-center"
@@ -200,8 +200,7 @@
 import { Link } from "@inertiajs/inertia-vue3";
 import { onMounted, onUpdated } from "vue";
 // import { has_permission } from "../appExternal.js";
-// import { has_permission } from "appExternal.js";
-
+import { has_permission } from "../../appExternal";
 
 onMounted(() => {
     var links = document.querySelectorAll("#Link_id");

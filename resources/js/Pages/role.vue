@@ -48,6 +48,7 @@
                                     >
                                         <button
                                             class="btn bg-gradient-dark mb-0"
+                                            v-if="has_permission('add_role')"
                                             type="button"
                                             @click="create"
                                         >
@@ -107,6 +108,14 @@
                                                         Display Name
                                                     </th>
                                                     <th
+                                                        v-if="
+                                                            has_permission(
+                                                                'delete_role'
+                                                            ) ||
+                                                            has_permission(
+                                                                'edit_role'
+                                                            )
+                                                        "
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                                                     >
                                                         Option
@@ -145,12 +154,27 @@
                                                             }}
                                                         </p>
                                                     </td>
-                                                    <td class="align-middle">
+                                                    <td
+                                                        class="align-middle"
+                                                        v-if="
+                                                            has_permission(
+                                                                'delete_role'
+                                                            ) ||
+                                                            has_permission(
+                                                                'edit_role'
+                                                            )
+                                                        "
+                                                    >
                                                         <div
                                                             class="ms-auto text-center"
                                                         >
                                                             <button
                                                                 class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                                                v-if="
+                                                                    has_permission(
+                                                                        'delete_role'
+                                                                    )
+                                                                "
                                                                 @click="
                                                                     deleteRoleData(
                                                                         data.id,
@@ -165,6 +189,11 @@
                                                             </button>
                                                             <button
                                                                 class="btn btn-link text-dark px-3 mb-0"
+                                                                v-if="
+                                                                    has_permission(
+                                                                        'edit_role'
+                                                                    )
+                                                                "
                                                                 @click="
                                                                     editRoleData(
                                                                         data
@@ -210,6 +239,11 @@
                                             <div class="ms-auto text-end">
                                                 <button
                                                     class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                                    v-if="
+                                                        has_permission(
+                                                            'delete_role'
+                                                        )
+                                                    "
                                                     @click="
                                                         deleteRoleData(
                                                             data.id,
@@ -224,6 +258,11 @@
                                                 </button>
                                                 <button
                                                     class="btn btn-link text-dark px-3 mb-0"
+                                                    v-if="
+                                                        has_permission(
+                                                            'edit_role'
+                                                        )
+                                                    "
                                                     @click="editRoleData(data)"
                                                 >
                                                     <i
@@ -249,6 +288,7 @@
 import Layout from "@/components/App/Layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import roleForm from "../components/App/roleForm.vue";
+import { has_permission } from "../appExternal";
 
 import { reactive, onMounted, ref } from "vue";
 
@@ -299,7 +339,7 @@ function deleteRoleData(id, display_name) {
                     }
                 })
                 .catch(function (error) {
-                    if(error.message){
+                    if (error.message) {
                         errorAlert(error.message);
                     }
                 });
@@ -307,12 +347,12 @@ function deleteRoleData(id, display_name) {
     });
 }
 
-function errorAlert(error){
+function errorAlert(error) {
     Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
+        icon: "error",
+        title: "Oops...",
         text: error,
-        })
+    });
 }
 
 function create() {

@@ -17,11 +17,6 @@ class PermissionSeeder extends Seeder
     {
         $datas = [
             [
-                'name' => 'view_dashbord',
-                'display_name' =>  'View Dashboard',
-                'category' => 'Dashboard'
-            ],
-            [
                 'name' => 'view_broker',
                 'display_name' =>  'View Broker',
                 'category' => 'Broker'
@@ -70,16 +65,6 @@ class PermissionSeeder extends Seeder
                 'name' => 'edit_role',
                 'display_name' =>  'Edit Role',
                 'category' => 'Role'
-            ],
-             [
-                'name' => 'view_permission',
-                'display_name' =>  'View Permission',
-                'category' => 'Permission'
-            ],
-            [
-                'name' => 'update_permission',
-                'display_name' =>  'Update Permission',
-                'category' => 'Permission'
             ],
         ];
 

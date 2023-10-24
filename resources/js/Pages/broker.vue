@@ -49,7 +49,11 @@
                                                 class="col-6 align-items-center text-end"
                                             >
                                                 <button
-                                                    v-if="has_permission('add_broker')"
+                                                    v-if="
+                                                        has_permission(
+                                                            'add_broker'
+                                                        )
+                                                    "
                                                     class="btn bg-gradient-dark mb-0"
                                                     type="button"
                                                     @click="addNewBroker"
@@ -117,6 +121,14 @@
                                                                 Number
                                                             </th>
                                                             <th
+                                                                v-if="
+                                                                    has_permission(
+                                                                        'delete_broker'
+                                                                    ) ||
+                                                                    has_permission(
+                                                                        'edit_broker'
+                                                                    )
+                                                                "
                                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                                                             >
                                                                 Option
@@ -172,6 +184,14 @@
                                                                 </p>
                                                             </td>
                                                             <td
+                                                                v-if="
+                                                                    has_permission(
+                                                                        'delete_broker'
+                                                                    ) ||
+                                                                    has_permission(
+                                                                        'edit_broker'
+                                                                    )
+                                                                "
                                                                 class="align-middle"
                                                             >
                                                                 <div
@@ -179,6 +199,11 @@
                                                                 >
                                                                     <button
                                                                         class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                                                        v-if="
+                                                                            has_permission(
+                                                                                'delete_broker'
+                                                                            )
+                                                                        "
                                                                         @click="
                                                                             deleteBrokerData(
                                                                                 data.id,
@@ -193,6 +218,11 @@
                                                                     </button>
                                                                     <button
                                                                         class="btn btn-link text-dark px-3 mb-0"
+                                                                        v-if="
+                                                                            has_permission(
+                                                                                'edit_broker'
+                                                                            )
+                                                                        "
                                                                         @click="
                                                                             editBrokerData(
                                                                                 data
@@ -260,6 +290,11 @@
                                                     >
                                                         <button
                                                             class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                                            v-if="
+                                                                has_permission(
+                                                                    'delete_broker'
+                                                                )
+                                                            "
                                                             @click="
                                                                 deleteBrokerData(
                                                                     data.id,
@@ -274,6 +309,11 @@
                                                         </button>
                                                         <button
                                                             class="btn btn-link text-dark px-3 mb-0"
+                                                            v-if="
+                                                                has_permission(
+                                                                    'edit_broker'
+                                                                )
+                                                            "
                                                             @click="
                                                                 editBrokerData(
                                                                     data
@@ -814,13 +854,13 @@
 import layout from "@/components/App/layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import brokerForm from "../components/App/brokerForm.vue";
-import { has_permission } from "../appExternal.js";
+import { has_permission } from "../appExternal";
 
 import { reactive, ref, onMounted } from "vue";
 
 const data = reactive({
     brokerData: {},
-    permissions:Object,
+    permissions: Object,
     errors: {},
     table: false,
 });
@@ -868,7 +908,7 @@ function deleteBrokerData(id, broker_name) {
                     }
                 })
                 .catch(function (error) {
-                    if(error.message){
+                    if (error.message) {
                         errorAlert(error.message);
                     }
                 });
@@ -876,12 +916,12 @@ function deleteBrokerData(id, broker_name) {
     });
 }
 
-function errorAlert(error){
+function errorAlert(error) {
     Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
+        icon: "error",
+        title: "Oops...",
         text: error,
-    })
+    });
 }
 
 function addNewBroker() {

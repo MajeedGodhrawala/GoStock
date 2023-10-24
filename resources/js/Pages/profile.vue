@@ -193,6 +193,7 @@
                                     </p>
                                     <button
                                         @click="editProfile"
+                                        v-if="has_permission('edit_profile')"
                                         class="btn btn-info btn-sm ms-auto"
                                     >
                                         Save Profile
@@ -645,6 +646,7 @@
 import layout from "@/components/App/layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { reactive } from "vue";
+import { has_permission } from "../appExternal";
 
 const data = reactive({
     userData: props.user,
