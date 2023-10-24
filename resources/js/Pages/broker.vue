@@ -1,3 +1,37 @@
+<style>
+.select {
+    position: relative;
+    min-width: 30px;
+}
+.select select {
+    -webkit-appearance: none;
+    padding: 7px 40px 7px 12px;
+    width: 100%;
+    border: 1px solid #e8eaed;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 150ms ease;
+}
+.select select:required:invalid {
+    color: #5a667f;
+}
+.select select option {
+    color: #223254;
+}
+.select select option[value=""][disabled] {
+    display: none;
+}
+.select select:focus {
+    outline: none;
+    border-color: #07f;
+    box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.2);
+}
+.select select:hover + svg {
+    stroke: #07f;
+}
+</style>
 <template>
     <Head title="Broker" />
     <layout>
@@ -69,24 +103,73 @@
                                 </div>
 
                                 <div class="card-body p-3">
-                                    <div class="form-check form-switch">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="flexSwitchCheckDefault"
-                                            v-model="data.table"
-                                        />
-                                        <label
-                                            v-if="data.table"
-                                            class="form-check-label"
-                                            for="flexSwitchCheckDefault"
-                                            >Table</label
-                                        ><label
-                                            v-else="data.table"
-                                            class="form-check-label"
-                                            for="flexSwitchCheckDefault"
-                                            >List</label
-                                        >
+                                    <div class="row">
+                                        <div class="col-md-auto">
+                                            <div class="form-check form-switch">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    id="flexSwitchCheckDefault"
+                                                    v-model="data.table"
+                                                />
+                                                <label
+                                                    v-if="data.table"
+                                                    class="form-check-label"
+                                                    for="flexSwitchCheckDefault"
+                                                    >Table</label
+                                                ><label
+                                                    v-else="data.table"
+                                                    class="form-check-label"
+                                                    for="flexSwitchCheckDefault"
+                                                    >List</label
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <label class="select" for="slct">
+                                                <select
+                                                    id="slct"
+                                                    required="required"
+                                                    v-model="data.per_page"
+                                                    @change="changePerpage"
+                                                >
+                                                    <option value="5">5</option>
+                                                    <option value="10">
+                                                        10
+                                                    </option>
+                                                    <option value="15">
+                                                        15
+                                                    </option>
+                                                    <option value="25">
+                                                        25
+                                                    </option>
+                                                    <option value="50">
+                                                        50
+                                                    </option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                        <div class="col">
+                                            <div
+                                                class="ms-md-auto pe-md-3 d-flex align-items-end"
+                                            >
+                                                <div
+                                                    class="input-group input-group-outline"
+                                                >
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Search"
+                                                        class="form-control"
+                                                        @input="
+                                                            searchData(
+                                                                $event.target
+                                                                    .value
+                                                            )
+                                                        "
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div
@@ -107,18 +190,17 @@
                                                             <th
                                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
                                                             >
-                                                                Broker Name
+                                                                Name
                                                             </th>
                                                             <th
                                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                                                             >
-                                                                Broker Email
+                                                                Email
                                                             </th>
                                                             <th
                                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                                                             >
-                                                                Broker Phone
-                                                                Number
+                                                                Phone Number
                                                             </th>
                                                             <th
                                                                 v-if="
@@ -331,6 +413,67 @@
                                         </div>
                                     </div>
                                 </div>
+                                <nav aria-label="Page navigation example">
+                                    <ul
+                                        class="pagination justify-content-center"
+                                    >
+                                        <li
+                                            class="page-item"
+                                            v-for="page in data.pages"
+                                            @click="changePage(page)"
+                                        >
+                                            <a class="page-link">{{ page }}</a>
+                                        </li>
+                                        <!-- <li class="page-item disabled">
+                                            <a
+                                                class="page-link"
+                                                href="javascript:;"
+                                                tabindex="-1"
+                                            >
+                                                <span class="material-icons">
+                                                    keyboard_arrow_left
+                                                </span>
+                                                <span class="sr-only"
+                                                    >Previous</span
+                                                >
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a
+                                                class="page-link"
+                                                href="javascript:;"
+                                                >1</a
+                                            >
+                                        </li>
+                                        <li class="page-item active">
+                                            <a
+                                                class="page-link"
+                                                href="javascript:;"
+                                                >2</a
+                                            >
+                                        </li>
+                                        <li class="page-item">
+                                            <a
+                                                class="page-link"
+                                                href="javascript:;"
+                                                >3</a
+                                            >
+                                        </li>
+                                        <li class="page-item">
+                                            <a
+                                                class="page-link"
+                                                href="javascript:;"
+                                            >
+                                                <span class="material-icons">
+                                                    keyboard_arrow_right
+                                                </span>
+                                                <span class="sr-only"
+                                                    >Next</span
+                                                >
+                                            </a>
+                                        </li> -->
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                     </div>
@@ -488,360 +631,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-7 mt-4">
-                    <div class="card">
-                        <div class="card-header pb-0 px-3">
-                            <h6 class="mb-0">Billing Information</h6>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <ul class="list-group">
-                                <li
-                                    class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-3 text-sm">
-                                            Oliver Liam
-                                        </h6>
-                                        <span class="mb-2 text-xs"
-                                            >Company Name:
-                                            <span
-                                                class="text-dark font-weight-bold ms-sm-2"
-                                                >Viking Burrito</span
-                                            ></span
-                                        >
-                                        <span class="mb-2 text-xs"
-                                            >Email Address:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >oliver@burrito.com</span
-                                            ></span
-                                        >
-                                        <span class="text-xs"
-                                            >VAT Number:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >FRB1235476</span
-                                            ></span
-                                        >
-                                    </div>
-                                    <div class="ms-auto text-end">
-                                        <a
-                                            class="btn btn-link text-danger text-gradient px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >delete</i
-                                            >Delete</a
-                                        >
-                                        <a
-                                            class="btn btn-link text-dark px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >edit</i
-                                            >Edit</a
-                                        >
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex p-4 mb-2 mt-3 bg-gray-100 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-3 text-sm">
-                                            Lucas Harper
-                                        </h6>
-                                        <span class="mb-2 text-xs"
-                                            >Company Name:
-                                            <span
-                                                class="text-dark font-weight-bold ms-sm-2"
-                                                >Stone Tech Zone</span
-                                            ></span
-                                        >
-                                        <span class="mb-2 text-xs"
-                                            >Email Address:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >lucas@stone-tech.com</span
-                                            ></span
-                                        >
-                                        <span class="text-xs"
-                                            >VAT Number:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >FRB1235476</span
-                                            ></span
-                                        >
-                                    </div>
-                                    <div class="ms-auto text-end">
-                                        <a
-                                            class="btn btn-link text-danger text-gradient px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >delete</i
-                                            >Delete</a
-                                        >
-                                        <a
-                                            class="btn btn-link text-dark px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >edit</i
-                                            >Edit</a
-                                        >
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex p-4 mb-2 mt-3 bg-gray-100 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-3 text-sm">
-                                            Ethan James
-                                        </h6>
-                                        <span class="mb-2 text-xs"
-                                            >Company Name:
-                                            <span
-                                                class="text-dark font-weight-bold ms-sm-2"
-                                                >Fiber Notion</span
-                                            ></span
-                                        >
-                                        <span class="mb-2 text-xs"
-                                            >Email Address:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >ethan@fiber.com</span
-                                            ></span
-                                        >
-                                        <span class="text-xs"
-                                            >VAT Number:
-                                            <span
-                                                class="text-dark ms-sm-2 font-weight-bold"
-                                                >FRB1235476</span
-                                            ></span
-                                        >
-                                    </div>
-                                    <div class="ms-auto text-end">
-                                        <a
-                                            class="btn btn-link text-danger text-gradient px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >delete</i
-                                            >Delete</a
-                                        >
-                                        <a
-                                            class="btn btn-link text-dark px-3 mb-0"
-                                            href="javascript:;"
-                                            ><i
-                                                class="material-icons text-sm me-2"
-                                                >edit</i
-                                            >Edit</a
-                                        >
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 mt-4">
-                    <div class="card h-100 mb-4">
-                        <div class="card-header pb-0 px-3">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="mb-0">Your Transaction's</h6>
-                                </div>
-                                <div
-                                    class="col-md-6 d-flex justify-content-start justify-content-md-end align-items-center"
-                                >
-                                    <i class="material-icons me-2 text-lg"
-                                        >date_range</i
-                                    >
-                                    <small>23 - 30 March 2020</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pt-4 p-3">
-                            <h6
-                                class="text-uppercase text-body text-xs font-weight-bolder mb-3"
-                            >
-                                Newest
-                            </h6>
-                            <ul class="list-group">
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >expand_more</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                Netflix
-                                            </h6>
-                                            <span class="text-xs"
-                                                >27 March 2020, at 12:30
-                                                PM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold"
-                                    >
-                                        - $ 2,500
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >expand_less</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                Apple
-                                            </h6>
-                                            <span class="text-xs"
-                                                >27 March 2020, at 04:30
-                                                AM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold"
-                                    >
-                                        + $ 2,000
-                                    </div>
-                                </li>
-                            </ul>
-                            <h6
-                                class="text-uppercase text-body text-xs font-weight-bolder my-3"
-                            >
-                                Yesterday
-                            </h6>
-                            <ul class="list-group">
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >expand_less</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                Stripe
-                                            </h6>
-                                            <span class="text-xs"
-                                                >26 March 2020, at 13:45
-                                                PM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold"
-                                    >
-                                        + $ 750
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >expand_less</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                HubSpot
-                                            </h6>
-                                            <span class="text-xs"
-                                                >26 March 2020, at 12:30
-                                                PM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold"
-                                    >
-                                        + $ 1,000
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >expand_less</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                Creative Tim
-                                            </h6>
-                                            <span class="text-xs"
-                                                >26 March 2020, at 08:30
-                                                AM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold"
-                                    >
-                                        + $ 2,500
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex align-items-center">
-                                        <button
-                                            class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"
-                                        >
-                                            <i class="material-icons text-lg"
-                                                >priority_high</i
-                                            >
-                                        </button>
-                                        <div class="d-flex flex-column">
-                                            <h6 class="mb-1 text-dark text-sm">
-                                                Webflow
-                                            </h6>
-                                            <span class="text-xs"
-                                                >26 March 2020, at 05:00
-                                                AM</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-dark text-sm font-weight-bold"
-                                    >
-                                        Pending
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
         <broker-form
             ref="broker_form"
@@ -856,13 +645,16 @@ import { Head } from "@inertiajs/inertia-vue3";
 import brokerForm from "../components/App/brokerForm.vue";
 import { has_permission } from "../appExternal";
 
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 
 const data = reactive({
     brokerData: {},
     permissions: Object,
     errors: {},
-    table: false,
+    table: true,
+    pages: 0,
+    per_page: 5,
+    current_page: 1,
 });
 
 const props = defineProps({
@@ -876,11 +668,16 @@ onMounted(() => {
 });
 
 function getBrokerData() {
+    let pagination_data = {
+        page: data.current_page,
+        per_page: data.per_page,
+    };
     axios
-        .post("getBrokerData")
+        .post("getBrokerData", pagination_data)
         .then(function (response) {
             if (response.data.broker_data) {
                 data.brokerData = response.data.broker_data;
+                data.pages = response.data.pages;
             }
         })
         .catch(function (error) {
@@ -922,6 +719,20 @@ function errorAlert(error) {
         title: "Oops...",
         text: error,
     });
+}
+
+function changePerpage() {
+    data.current_page = 1;
+    getBrokerData();
+}
+
+function searchData(search) {
+    console.log(search);
+}
+
+function changePage(page) {
+    data.current_page = page;
+    getBrokerData();
 }
 
 function addNewBroker() {

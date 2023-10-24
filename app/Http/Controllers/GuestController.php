@@ -15,10 +15,11 @@ class GuestController extends Controller
 {
     public function login(){
         if(Auth::user()) {
-            return Redirect("dashboard");
-        } else {
-            return view('Login_Register.Login');
+            $this->logout();
+            // return Redirect("dashboard");
         }
+        
+        return view('Login_Register.Login');
     }
 
     public function register(){

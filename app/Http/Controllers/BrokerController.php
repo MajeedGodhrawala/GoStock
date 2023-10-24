@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Broker;
 use App\Http\Requests\BrokerFormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -29,7 +30,9 @@ class BrokerController extends Controller
         return response()->json(['delete' => 'Record '.$Broker->broker_name.' Is Deleted.']);
     }
 
-    public function getAllBroker(){
-        return response()->json(['broker_data' => Broker::all()]);
+    public function getAllBroker(Request $request){
+        $pages = (count(Broker::where('user_id', '=', Auth::user()->id)->get())) / $request->per_page;
+        $broker = Broker::where('user_id', '=', Auth::user()->id)->offset($request->per_page * ($request->page - 1))->limit($request->per_page)->get();
+        return response()->json(['broker_data' => $broker,'pages' => ceil($pages)]);
     }
 }
