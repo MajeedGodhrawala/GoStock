@@ -648,13 +648,14 @@ import { has_permission } from "../appExternal";
 import { reactive, ref, onMounted, computed } from "vue";
 
 const data = reactive({
-    brokerData: {},
+    brokerData: Object,
     permissions: Object,
     errors: {},
     table: true,
     pages: 0,
     per_page: 5,
     current_page: 1,
+    search:"",
 });
 
 const props = defineProps({
@@ -671,6 +672,7 @@ function getBrokerData() {
     let pagination_data = {
         page: data.current_page,
         per_page: data.per_page,
+        search : data.search,
     };
     axios
         .post("getBrokerData", pagination_data)
@@ -727,7 +729,13 @@ function changePerpage() {
 }
 
 function searchData(search) {
-    console.log(search);
+    if(search){
+        data.current_page = 1;
+        data.search = search;
+    } else {
+        data.search = "";
+    }
+    getBrokerData();
 }
 
 function changePage(page) {

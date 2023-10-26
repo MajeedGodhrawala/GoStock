@@ -31,8 +31,43 @@ class BrokerController extends Controller
     }
 
     public function getAllBroker(Request $request){
-        $pages = (count(Broker::where('user_id', '=', Auth::user()->id)->get())) / $request->per_page;
-        $broker = Broker::where('user_id', '=', Auth::user()->id)->offset($request->per_page * ($request->page - 1))->limit($request->per_page)->get();
-        return response()->json(['broker_data' => $broker,'pages' => ceil($pages)]);
+        $query = Broker::query();
+        $query->where('user_id', '=', Auth::user()->id);
+
+        if($request->search) {
+            $query->where('broker_name', 'like', '%' .$request->search. '%')
+            ->orWhere('broker_email', 'like', '%' .$request->search. '%')
+            ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%');
+        }
+
+        $pages = count($query->get()) / $request->per_page;
+        
+        $query->offset($request->per_page * ($request->page - 1))
+                   ->limit($request->per_page);
+        $records = $query->get();
+
+        return response()->json(['broker_data' => $records,'pages' => ceil($pages)]);
+        
+        // if($request->search){
+        //     $pages = (count(Broker::where('user_id', '=', Auth::user()->id)
+        //     ->where('broker_name', 'like', '%' .$request->search. '%')
+        //     ->orWhere('broker_email', 'like', '%' .$request->search. '%')
+        //     ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%')
+        //     ->get())) / $request->per_page;
+            
+        //     $broker = Broker::where('user_id', '=', Auth::user()->id)
+        //     ->where('broker_name', 'like', '%' .$request->search. '%')
+        //     ->orWhere('broker_email', 'like', '%' .$request->search. '%')
+        //     ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%')
+        //     ->offset($request->per_page * ($request->page - 1))
+        //     ->limit($request->per_page)
+        //     ->get();
+        // } else {
+        //     $pages = (count(Broker::where('user_id', '=', Auth::user()->id)->get())) / $request->per_page;
+        //     $broker = Broker::where('user_id', '=', Auth::user()->id)
+        //     ->offset($request->per_page * ($request->page - 1))
+        //     ->limit($request->per_page)->get();
+        // }
+        // return response()->json(['broker_data' => $broker,'pages' => ceil($pages)]);
     }
 }
