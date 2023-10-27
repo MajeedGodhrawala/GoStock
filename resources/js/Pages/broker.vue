@@ -412,68 +412,14 @@
                                             </ul>
                                         </div>
                                     </div>
+                                <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Showing {{ data.per_page * (data.current_page - 1) }} to {{ data.per_page * data.current_page }} of {{ data.total_records }} entries</p>
+
                                 </div>
-                                <nav aria-label="Page navigation example">
-                                    <ul
-                                        class="pagination justify-content-center"
-                                    >
-                                        <li
-                                            class="page-item"
-                                            v-for="page in data.pages"
-                                            @click="changePage(page)"
-                                        >
-                                            <a class="page-link">{{ page }}</a>
-                                        </li>
-                                        <!-- <li class="page-item disabled">
-                                            <a
-                                                class="page-link"
-                                                href="javascript:;"
-                                                tabindex="-1"
-                                            >
-                                                <span class="material-icons">
-                                                    keyboard_arrow_left
-                                                </span>
-                                                <span class="sr-only"
-                                                    >Previous</span
-                                                >
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link"
-                                                href="javascript:;"
-                                                >1</a
-                                            >
-                                        </li>
-                                        <li class="page-item active">
-                                            <a
-                                                class="page-link"
-                                                href="javascript:;"
-                                                >2</a
-                                            >
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link"
-                                                href="javascript:;"
-                                                >3</a
-                                            >
-                                        </li>
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link"
-                                                href="javascript:;"
-                                            >
-                                                <span class="material-icons">
-                                                    keyboard_arrow_right
-                                                </span>
-                                                <span class="sr-only"
-                                                    >Next</span
-                                                >
-                                            </a>
-                                        </li> -->
-                                    </ul>
-                                </nav>
+                                <pagination-page
+                                    ref="pagination_page"
+                                    @changePage="changePage"
+                                >
+                                </pagination-page>
                             </div>
                         </div>
                     </div>
@@ -643,6 +589,8 @@
 import layout from "@/components/App/layout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import brokerForm from "../components/App/brokerForm.vue";
+import paginationPage from "../components/App/pageination.vue";
+
 import { has_permission } from "../appExternal";
 
 import { reactive, ref, onMounted, computed } from "vue";
@@ -652,10 +600,10 @@ const data = reactive({
     permissions: Object,
     errors: {},
     table: true,
-    pages: 0,
+    total_records:Number,
     per_page: 5,
     current_page: 1,
-    search:"",
+    search: "",
 });
 
 const props = defineProps({
@@ -663,6 +611,7 @@ const props = defineProps({
 });
 
 const broker_form = ref(null);
+const pagination_page = ref(null);
 
 onMounted(() => {
     getBrokerData();
@@ -672,14 +621,15 @@ function getBrokerData() {
     let pagination_data = {
         page: data.current_page,
         per_page: data.per_page,
-        search : data.search,
+        search: data.search,
     };
     axios
         .post("getBrokerData", pagination_data)
         .then(function (response) {
             if (response.data.broker_data) {
                 data.brokerData = response.data.broker_data;
-                data.pages = response.data.pages;
+                data.total_records = response.data.total_records;
+                setPagination(response.data.pages);
             }
         })
         .catch(function (error) {
@@ -729,7 +679,7 @@ function changePerpage() {
 }
 
 function searchData(search) {
-    if(search){
+    if (search) {
         data.current_page = 1;
         data.search = search;
     } else {
@@ -741,6 +691,10 @@ function searchData(search) {
 function changePage(page) {
     data.current_page = page;
     getBrokerData();
+}
+
+function setPagination(pages) {
+    pagination_page.value.setPagination(pages);
 }
 
 function addNewBroker() {

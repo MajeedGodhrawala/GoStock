@@ -39,14 +39,14 @@ class BrokerController extends Controller
             ->orWhere('broker_email', 'like', '%' .$request->search. '%')
             ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%');
         }
-
-        $pages = count($query->get()) / $request->per_page;
+        $total_records = count($query->get());
+        $pages = $total_records / $request->per_page;
         
         $query->offset($request->per_page * ($request->page - 1))
                    ->limit($request->per_page);
         $records = $query->get();
 
-        return response()->json(['broker_data' => $records,'pages' => ceil($pages)]);
+        return response()->json(['broker_data' => $records,'pages' => ceil($pages),'total_records' => $total_records ]);
         
         // if($request->search){
         //     $pages = (count(Broker::where('user_id', '=', Auth::user()->id)
