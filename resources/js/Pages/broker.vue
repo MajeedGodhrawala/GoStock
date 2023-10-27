@@ -412,11 +412,24 @@
                                             </ul>
                                         </div>
                                     </div>
-                                <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Showing {{ data.per_page * (data.current_page - 1) }} to {{ data.per_page * data.current_page }} of {{ data.total_records }} entries</p>
-
+                                    <p
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                                    >
+                                        Showing
+                                        {{
+                                            data.per_page *
+                                            (data.current_page - 1)
+                                        }}
+                                        to
+                                        {{
+                                            data.per_page * data.current_page
+                                        }}
+                                        of {{ data.total_records }} entries
+                                    </p>
                                 </div>
                                 <pagination-page
-                                    ref="pagination_page"
+                                    :pages="data.pages"
+                                    :current_page="data.current_page"
                                     @changePage="changePage"
                                 >
                                 </pagination-page>
@@ -600,18 +613,17 @@ const data = reactive({
     permissions: Object,
     errors: {},
     table: true,
-    total_records:Number,
+    pages: 0,
+    total_records: Number,
     per_page: 5,
     current_page: 1,
     search: "",
 });
-
 const props = defineProps({
     user: Object,
 });
 
 const broker_form = ref(null);
-const pagination_page = ref(null);
 
 onMounted(() => {
     getBrokerData();
@@ -628,8 +640,8 @@ function getBrokerData() {
         .then(function (response) {
             if (response.data.broker_data) {
                 data.brokerData = response.data.broker_data;
+                data.pages = response.data.pages;
                 data.total_records = response.data.total_records;
-                setPagination(response.data.pages);
             }
         })
         .catch(function (error) {
@@ -691,10 +703,6 @@ function searchData(search) {
 function changePage(page) {
     data.current_page = page;
     getBrokerData();
-}
-
-function setPagination(pages) {
-    pagination_page.value.setPagination(pages);
 }
 
 function addNewBroker() {

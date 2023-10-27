@@ -1,51 +1,47 @@
 <template>
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            <li v-if="data.current_page != 1" class="page-item">
-                <a class="page-link" @click="changePage((data.current_page - 1))">
+            <li v-if="current_page != 1" class="page-item">
+                <button class="page-link" @click="changePage(current_page - 1)">
                     <span class="material-icons"> keyboard_arrow_left </span>
                     <span class="sr-only">Previous</span>
-                </a>
+                </button>
             </li>
-            <template v-for="page in data.pages">
-                <li class="page-item" 
-                :class = "(page == data.current_page)?' active':''"
-                @click="changePage(page)">
-                    <a class="page-link text-info">{{ page }}</a>
+            <template v-for="page in pages">
+                <li
+                    class="page-item"
+                    :class="page == current_page ? ' active' : ''"
+                    @click="changePage(page)"
+                >
+                    <button class="page-link text-info">{{ page }}</button>
                 </li>
             </template>
-            <li v-if="data.current_page != data.pages" class="page-item">
-                <a class="page-link" @click="changePage((data.current_page + 1))">
+            <li v-if="current_page != pages" class="page-item">
+                <button class="page-link" @click="changePage(current_page + 1)">
                     <span class="material-icons"> keyboard_arrow_right </span>
                     <span class="sr-only">Next</span>
-                </a>
+                </button>
             </li>
         </ul>
     </nav>
 </template>
 <script setup>
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 
 const data = reactive({
-    pages: Number,
-    current_page:1,
     errors: {},
 });
 
-const props = defineProps({});
-
-function setPagination(pages) {
-    data.pages = pages;
-}
+const props = defineProps({
+    pages: Number,
+    current_page: Number,
+});
 
 function changePage(page) {
-    data.current_page = page;
     emit("changePage", page);
 }
 
-defineExpose({
-    setPagination,
-});
+defineExpose({});
 
 const emit = defineEmits(["changePage"]);
 </script>

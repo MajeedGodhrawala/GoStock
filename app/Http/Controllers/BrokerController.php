@@ -45,7 +45,7 @@ class BrokerController extends Controller
         $query->offset($request->per_page * ($request->page - 1))
                    ->limit($request->per_page);
         $records = $query->get();
-
+        
         return response()->json(['broker_data' => $records,'pages' => ceil($pages),'total_records' => $total_records ]);
         
         // if($request->search){
