@@ -49,6 +49,7 @@ Route::post('editProfile',[ProfileController::class,'update']);
 
 //Broker
 // Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate']);
+Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate'])->middleware('role_permission:edit_broker|add_broker');
 Route::post('deleteBrokerData/{broker}',[BrokerController::class,'destroy']);
 Route::post('getBrokerData',[BrokerController::class,'getAllBroker']);
 // 
@@ -59,4 +60,5 @@ Route::post('delete/{role}',[RoleController::class,'destroy']);
 Route::post('get-role-data',[RoleController::class,'getAllRole']);
 Route::post('update-role_permission',[PermissionController::class,'updateRolePermission']);
 //
-Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate'])->middleware('role_permission:edit_broker|add_broker');
+
+Route::post('uploadCsvFile',[BrokerController::class,'import']);

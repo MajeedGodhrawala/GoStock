@@ -97,6 +97,22 @@
                                                         >add</i
                                                     >&nbsp;&nbsp;Add New Broker
                                                 </button>
+                                                &nbsp;
+                                                <button
+                                                    v-if="
+                                                        has_permission(
+                                                            'add_broker'
+                                                        )
+                                                    "
+                                                    class="btn bg-gradient-dark mb-0"
+                                                    type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#uploadModel"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-file-arrow-up"
+                                                    ></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -421,9 +437,7 @@
                                             (data.current_page - 1)
                                         }}
                                         to
-                                        {{
-                                            data.per_page * data.current_page
-                                        }}
+                                        {{ data.per_page * data.current_page }}
                                         of {{ data.total_records }} entries
                                     </p>
                                 </div>
@@ -437,164 +451,85 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-header pb-0 p-3">
-                            <div class="row">
-                                <div class="col-6 d-flex align-items-center">
-                                    <h6 class="mb-0">Invoices</h6>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <button
-                                        class="btn btn-outline-primary btn-sm mb-0"
-                                    >
-                                        View All
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 pb-0">
-                            <ul class="list-group">
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6
-                                            class="mb-1 text-dark font-weight-bold text-sm"
-                                        >
-                                            March, 01, 2020
-                                        </h6>
-                                        <span class="text-xs">#MS-415646</span>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-sm"
-                                    >
-                                        $180
-                                        <button
-                                            class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"
-                                        >
-                                            <i
-                                                class="material-icons text-lg position-relative me-1"
-                                                >picture_as_pdf</i
-                                            >
-                                            PDF
-                                        </button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6
-                                            class="text-dark mb-1 font-weight-bold text-sm"
-                                        >
-                                            February, 10, 2021
-                                        </h6>
-                                        <span class="text-xs">#RV-126749</span>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-sm"
-                                    >
-                                        $250
-                                        <button
-                                            class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"
-                                        >
-                                            <i
-                                                class="material-icons text-lg position-relative me-1"
-                                                >picture_as_pdf</i
-                                            >
-                                            PDF
-                                        </button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6
-                                            class="text-dark mb-1 font-weight-bold text-sm"
-                                        >
-                                            April, 05, 2020
-                                        </h6>
-                                        <span class="text-xs">#FB-212562</span>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-sm"
-                                    >
-                                        $560
-                                        <button
-                                            class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"
-                                        >
-                                            <i
-                                                class="material-icons text-lg position-relative me-1"
-                                                >picture_as_pdf</i
-                                            >
-                                            PDF
-                                        </button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6
-                                            class="text-dark mb-1 font-weight-bold text-sm"
-                                        >
-                                            June, 25, 2019
-                                        </h6>
-                                        <span class="text-xs">#QW-103578</span>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-sm"
-                                    >
-                                        $120
-                                        <button
-                                            class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"
-                                        >
-                                            <i
-                                                class="material-icons text-lg position-relative me-1"
-                                                >picture_as_pdf</i
-                                            >
-                                            PDF
-                                        </button>
-                                    </div>
-                                </li>
-                                <li
-                                    class="list-group-item border-0 d-flex justify-content-between ps-0 border-radius-lg"
-                                >
-                                    <div class="d-flex flex-column">
-                                        <h6
-                                            class="text-dark mb-1 font-weight-bold text-sm"
-                                        >
-                                            March, 01, 2019
-                                        </h6>
-                                        <span class="text-xs">#AR-803481</span>
-                                    </div>
-                                    <div
-                                        class="d-flex align-items-center text-sm"
-                                    >
-                                        $300
-                                        <button
-                                            class="btn btn-link text-dark text-sm mb-0 px-0 ms-4"
-                                        >
-                                            <i
-                                                class="material-icons text-lg position-relative me-1"
-                                                >picture_as_pdf</i
-                                            >
-                                            PDF
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
         <broker-form
             ref="broker_form"
             @getBrokerData="getBrokerData"
         ></broker-form>
+        <!-- Upload File Model -->
+        <div
+            class="modal fade"
+            id="uploadModel"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modal-notification"
+            aria-hidden="true"
+        >
+            <div
+                class="modal-dialog modal-danger modal-dialog-centered modal-"
+                role="document"
+            >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6
+                            class="modal-title font-weight-normal"
+                            id="modal-title-notification"
+                        >
+                            Your attention is required
+                        </h6>
+                        <button
+                            type="button"
+                            class="btn-close text-dark"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="file" v-on:change="uploadFile($event)" />
+                        <!-- <div class="py-3 text-center">
+                            <i class="material-icons h1 text-secondary">
+                                notifications_active
+                            </i>
+                            <h4 class="text-gradient text-danger mt-4">
+                                You should read this!
+                            </h4>
+                            <p>
+                                A small river named Duden flows by their place
+                                and supplies it with the necessary regelialia.
+                            </p>
+                        </div> -->
+                        <template
+                            v-for="(error, index) in data.errors"
+                            :key="index"
+                        >
+                            {{ error }}
+                            <div
+                                id="validationServer03Feedback"
+                                class="invalid-feedback"
+                                v-if="data.errors[index].hasOwnProperty(error)"
+                            >
+                                {{ error }}
+                            </div>
+                        </template>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white">
+                            Ok, Got it
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-link text-white ml-auto"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </layout>
 </template>
 
@@ -712,5 +647,32 @@ function addNewBroker() {
 
 function editBrokerData(data) {
     broker_form.value.editBrokerData(data);
+}
+
+function uploadFile(e) {
+    const formData = new FormData();
+    const file = e.target.files[0];
+    formData.append("file", file);
+    axios
+        .post("uploadCsvFile", formData)
+        .then(function (response) {
+            if (response.data.success) {
+            }
+        })
+        .catch(function (error) {
+            if (error.response.data.errors) {
+                // data.errors = error.response.data.errors;
+                console.log(error.response.data.errors);
+                let file_error_array  = [];
+                Object.keys(error.response.data.errors).forEach((key) => {
+                    key.split(".").pop;
+                    
+                    console.log(key);
+                });
+            } else if (error.message) {
+                errorAlert(error.message);
+                // router.visit("/unauthenticatPage");
+            }
+        });
 }
 </script>

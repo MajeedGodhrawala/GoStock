@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Broker;
 use App\Http\Requests\BrokerFormRequest;
+use App\Imports\ImportBroker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BrokerController extends Controller
 {
@@ -14,7 +16,7 @@ class BrokerController extends Controller
         return Inertia::render('broker',['user' => Auth::user()]);
     }
 
-    public function createOrUpdate(BrokerFormRequest $request){
+    public function createOrUpdate(  $request){
         if($request->id){
             $role = Broker::find($request->id);
             $role->update($request->requestedField());
@@ -69,5 +71,14 @@ class BrokerController extends Controller
         //     ->limit($request->per_page)->get();
         // }
         // return response()->json(['broker_data' => $broker,'pages' => ceil($pages)]);
+    }
+
+    public function import(Request $request){
+        if($request->hasFile('file')){
+          $path = $request->file('file')->getRealPath();
+          $data = Excel::import(new ImportBroker,$path);
+        } else {
+            dd("Null");
+        }
     }
 }
