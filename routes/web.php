@@ -62,3 +62,4 @@ Route::post('update-role_permission',[PermissionController::class,'updateRolePer
 //
 
 Route::post('uploadCsvFile',[BrokerController::class,'import']);
+Route::get('exportFile',[BrokerController::class,'export']);

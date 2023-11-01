@@ -36,6 +36,7 @@
     <script src="{{asset('js/core/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/plugins/perfect-scrollbar.min.js')}}"></script>
     <script src="{{asset('js/plugins/smooth-scrollbar.min.js')}}"></script>
+    <script src="../../assets/js/plugins/dropzone.min.js"></script>
     {{-- <script src="{{asset('js/plugins/chartjs.min.js')}}"></script> --}}
 
     <script>

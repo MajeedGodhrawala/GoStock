@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportBroker;
 use App\Models\Broker;
 use App\Http\Requests\BrokerFormRequest;
+use App\Http\Requests\FileRequest;
 use App\Imports\ImportBroker;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -12,6 +15,14 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BrokerController extends Controller
 {
+
+    protected $date;
+
+    public function __construct() 
+    {
+        $this->date = Carbon::now()->toDateTimeString();
+    }
+
     public function broker(){
         return Inertia::render('broker',['user' => Auth::user()]);
     }
@@ -49,36 +60,18 @@ class BrokerController extends Controller
         $records = $query->get();
         
         return response()->json(['broker_data' => $records,'pages' => ceil($pages),'total_records' => $total_records ]);
-        
-        // if($request->search){
-        //     $pages = (count(Broker::where('user_id', '=', Auth::user()->id)
-        //     ->where('broker_name', 'like', '%' .$request->search. '%')
-        //     ->orWhere('broker_email', 'like', '%' .$request->search. '%')
-        //     ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%')
-        //     ->get())) / $request->per_page;
-            
-        //     $broker = Broker::where('user_id', '=', Auth::user()->id)
-        //     ->where('broker_name', 'like', '%' .$request->search. '%')
-        //     ->orWhere('broker_email', 'like', '%' .$request->search. '%')
-        //     ->orWhere('broker_phone_number', 'like', '%' .$request->search. '%')
-        //     ->offset($request->per_page * ($request->page - 1))
-        //     ->limit($request->per_page)
-        //     ->get();
-        // } else {
-        //     $pages = (count(Broker::where('user_id', '=', Auth::user()->id)->get())) / $request->per_page;
-        //     $broker = Broker::where('user_id', '=', Auth::user()->id)
-        //     ->offset($request->per_page * ($request->page - 1))
-        //     ->limit($request->per_page)->get();
-        // }
-        // return response()->json(['broker_data' => $broker,'pages' => ceil($pages)]);
     }
 
-    public function import(Request $request){
+    public function import(FileRequest $request){
         if($request->hasFile('file')){
           $path = $request->file('file')->getRealPath();
-          $data = Excel::import(new ImportBroker,$path);
-        } else {
-            dd("Null");
+          Excel::import(new ImportBroker,$path);
         }
+         return response()->json(['success' => $request->file('file')->getClientOriginalName().' Upload Success' ]);
+        
+    }
+
+    public function export(){
+        return Excel::download(new ExportBroker, 'broker'.$this->date.'.csv');
     }
 }

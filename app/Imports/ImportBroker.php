@@ -21,47 +21,56 @@ class ImportBroker implements ToCollection, WithHeadingRow
     */
     public function collection(Collection $rows)
     {
-        $rules = [];
-
-        foreach ($rows as $key=>$row) 
-        {
-            if($row['id']) {
-                $rules[$key.".name"] =  "required|unique:brokers,broker_name,{$row['id']}"; 
-                $rules[$key.".email"] =  "required|email|unique:brokers,broker_email,{$row['id']}";   
-                $rules[$key.".phone_number"] =  "required|digits:10|unique:brokers,broker_phone_number,{$row['id']}";            
-            } else {
-                $rules[$key.".name"] =  'required|unique:brokers,broker_name';
-                $rules[$key.".email"] =  'required|email|unique:brokers,broker_email';
-                $rules[$key.".phone_number"] =  'required|digits:10|unique:brokers,broker_phone_number';
-            }
+        $customMessages = [
+            'required' => 'The field is required.',
+            'unique' => 'The field is allready exists.' ,
+            'digits' => 'The number field must be 10 digits.',
+            'email' => 'The field must be a valid email address.'
+        ];
+        
+        $validator = Validator::make($rows->toArray(), [
+             '*.name' => "required",
+             '*.email' =>'required|email',
+             '*.phone_number' => 'required|digits:10',
+        ],$customMessages);
+            
+        foreach($rows as $key=>$row){
+                $validator->addRules([
+                $key.'.name' => 'unique:brokers,broker_name,'.$row['id'],
+                $key.'.email' => 'unique:brokers,broker_email,'.$row['id'],
+                $key.'.phone_number' => 'unique:brokers,broker_phone_number,'.$row['id'],
+            ]);
         }
 
-        $validator = Validator::make($rows->toArray(), $rules)->validate();
-        // $validator = Validator::make($rows->toArray(), [
-        //      '*.name' => "required|unique:brokers,broker_name",
-        //      '*.email' =>'required|email|unique:brokers,broker_email',
-        //      '*.phone_number' => 'required|digits:10|unique:brokers,broker_phone_number',
-        //  ])->validate();
-        // // dd(gettype($rows));
-         
+        $validator->validate();
+    
         foreach ($rows as $key=>$row) 
         {
-            if($row['id']){
-                $role = Broker::find($row['id']);
-                $role->update([
-                    'user_id' =>  $role->user_id ? $role->user_id : Auth::user()->id,
-                    'broker_name' => $row['name'],
-                    'broker_email' => $row['email'],
-                    'broker_phone_number' => $row['phone_number'],
-                ]);
-            } else {
-                Broker::create([
-                    'user_id' => Auth::user()->id,
-                    'broker_name' => $row['name'],
-                    'broker_email' => $row['email'],
-                    'broker_phone_number' => $row['phone_number'],
-                ]);
+            $check = Broker::where('id', "=", $row['id'])
+            ->orWhere('broker_name', '=', $row['name'])
+            ->orWhere('broker_email', '=', $row['email'])
+            ->orWhere('broker_phone_number', '=', $row['phone_number'])->exists();
+            
+            if(!$check){
+                if($row['id']){
+                    $role = Broker::find($row['id']);
+                    $role->update([
+                        'user_id' =>  $role->user_id ? $role->user_id : Auth::user()->id,
+                        'broker_name' => $row['name'],
+                        'broker_email' => $row['email'],
+                        'broker_phone_number' => $row['phone_number'],
+                    ]);
+                } 
+                else {
+                    Broker::create([
+                        'user_id' => Auth::user()->id,
+                        'broker_name' => $row['name'],
+                        'broker_email' => $row['email'],
+                        'broker_phone_number' => $row['phone_number'],
+                    ]);
+                }
             }
+            
         }
     }
     

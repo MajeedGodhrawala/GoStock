@@ -36,6 +36,16 @@ class PermissionSeeder extends Seeder
                 'display_name' =>  'Edit Broker',
                 'category' => 'Broker'
             ],
+             [
+                'name' => 'import_broker',
+                'display_name' =>  'Import Broker',
+                'category' => 'Broker'
+            ],
+             [
+                'name' => 'export_broker',
+                'display_name' =>  'Export Broker',
+                'category' => 'Broker'
+            ],
             [
                 'name' => 'view_profile',
                 'display_name' =>  'View Profile',

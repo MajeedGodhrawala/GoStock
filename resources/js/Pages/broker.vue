@@ -59,7 +59,7 @@
         <!-- Breadcrumb End -->
         <section>
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="row">
                         <div class="col-md-12 mb-lg-0 mb-4">
                             <div class="card mt-3">
@@ -101,18 +101,32 @@
                                                 <button
                                                     v-if="
                                                         has_permission(
-                                                            'add_broker'
+                                                            'import_broker'
                                                         )
                                                     "
                                                     class="btn bg-gradient-dark mb-0"
                                                     type="button"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#uploadModel"
+                                                    @click="openImportModel"
                                                 >
                                                     <i
                                                         class="fa-solid fa-file-arrow-up"
                                                     ></i>
                                                 </button>
+                                                &nbsp;
+                                                <a
+                                                    v-if="
+                                                        has_permission(
+                                                            'export_broker'
+                                                        )
+                                                    "
+                                                    class="btn bg-gradient-dark mb-0"
+                                                    type="button"
+                                                    href="exportFile"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-file-arrow-down"
+                                                    ></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -293,7 +307,7 @@
                                                                 class="align-middle"
                                                             >
                                                                 <div
-                                                                    class="ms-auto text-end"
+                                                                    class="ms-auto text-center"
                                                                 >
                                                                     <button
                                                                         class="btn btn-link text-danger text-gradient px-3 mb-0"
@@ -467,7 +481,7 @@
             aria-hidden="true"
         >
             <div
-                class="modal-dialog modal-danger modal-dialog-centered modal-"
+                class="modal-dialog modal-lg modal-danger modal-dialog-centered modal-"
                 role="document"
             >
                 <div class="modal-content">
@@ -476,56 +490,71 @@
                             class="modal-title font-weight-normal"
                             id="modal-title-notification"
                         >
-                            Your attention is required
+                            Import Broker Data
                         </h6>
                         <button
                             type="button"
                             class="btn-close text-dark"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            @click="hideImportModel"
                         >
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="file" v-on:change="uploadFile($event)" />
-                        <!-- <div class="py-3 text-center">
-                            <i class="material-icons h1 text-secondary">
-                                notifications_active
-                            </i>
-                            <h4 class="text-gradient text-danger mt-4">
-                                You should read this!
-                            </h4>
-                            <p>
-                                A small river named Duden flows by their place
-                                and supplies it with the necessary regelialia.
-                            </p>
-                        </div> -->
-                        <template
-                            v-for="(error, index) in data.errors"
-                            :key="index"
-                        >
-                            {{ error }}
-                            <div
-                                id="validationServer03Feedback"
-                                class="invalid-feedback"
-                                v-if="data.errors[index].hasOwnProperty(error)"
-                            >
-                                {{ error }}
+                        <div class="form-control border dropzone" id="dropzone">
+                            <div class="fallback">
+                                <input
+                                    name="file"
+                                    type="file"
+                                    v-on:change="uploadFile($event)"
+                                    multiple
+                                />
                             </div>
-                        </template>
+                        </div>
+                        <br />
+                        <table
+                            v-if="data.importErrors != null"
+                            class="table align-items-center mb-0"
+                        >
+                            <thead>
+                                <tr>
+                                    <td>Row</td>
+                                    <td>Field</td>
+                                    <td>Error</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(error, index) in data.importErrors"
+                                    :key="index"
+                                >
+                                    <td>
+                                        {{ index.split(".")[0] }}
+                                    </td>
+                                    <td>
+                                        {{ index.split(".")[1] }}
+                                    </td>
+                                    <td class="text-danger">
+                                        {{ error[0] }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-white">
-                            Ok, Got it
-                        </button>
                         <button
                             type="button"
-                            class="btn btn-link text-white ml-auto"
+                            class="btn bg-gradient-secondary"
                             data-bs-dismiss="modal"
+                            @click="hideImportModel"
                         >
-                            Close
+                            Clear
                         </button>
+                        <!-- <button type="button" class="btn bg-gradient-primary">
+                            Save changes
+                        </button> -->
                     </div>
                 </div>
             </div>
@@ -553,6 +582,8 @@ const data = reactive({
     per_page: 5,
     current_page: 1,
     search: "",
+    myImportModal: null,
+    importErrors: Object,
 });
 const props = defineProps({
     user: Object,
@@ -562,6 +593,9 @@ const broker_form = ref(null);
 
 onMounted(() => {
     getBrokerData();
+    data.myImportModal = new bootstrap.Modal("#uploadModel", {
+        keyboard: false,
+    });
 });
 
 function getBrokerData() {
@@ -649,6 +683,16 @@ function editBrokerData(data) {
     broker_form.value.editBrokerData(data);
 }
 
+function openImportModel() {
+    data.importErrors = {};
+    data.myImportModal.show();
+}
+
+function hideImportModel() {
+    data.importErrors = {};
+    data.myImportModal.hide();
+}
+
 function uploadFile(e) {
     const formData = new FormData();
     const file = e.target.files[0];
@@ -657,21 +701,22 @@ function uploadFile(e) {
         .post("uploadCsvFile", formData)
         .then(function (response) {
             if (response.data.success) {
+                getBrokerData();
+                data.myImportModal.hide();
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: response.data.success,
+                    showConfirmButton: false,
+                    timer: 900,
+                });
             }
         })
         .catch(function (error) {
             if (error.response.data.errors) {
-                // data.errors = error.response.data.errors;
-                console.log(error.response.data.errors);
-                let file_error_array  = [];
-                Object.keys(error.response.data.errors).forEach((key) => {
-                    key.split(".").pop;
-                    
-                    console.log(key);
-                });
+                data.importErrors = error.response.data.errors;
             } else if (error.message) {
                 errorAlert(error.message);
-                // router.visit("/unauthenticatPage");
             }
         });
 }
