@@ -29,8 +29,8 @@ class BrokerController extends Controller
 
     public function createOrUpdate(  $request){
         if($request->id){
-            $role = Broker::find($request->id);
-            $role->update($request->requestedField());
+            $broker = Broker::find($request->id);
+            $broker->update($request->requestedField());
         } else {
             Broker::create($request->requestedField());
         }
@@ -62,13 +62,24 @@ class BrokerController extends Controller
         return response()->json(['broker_data' => $records,'pages' => ceil($pages),'total_records' => $total_records ]);
     }
 
+    public function deleteBrokerRecords(Request $datas){
+        dd($datas->records);
+        // foreach($datas->records as $key=>$data){
+        //     $broker = Broker::find()
+        //     $Broker->delete();
+        // }
+
+        return response()->json(['updated' => 'Permission Has Been Updated',
+        'role_permissions' => $this->rolePermission(),'user_permissions' => $user_permissions,]);
+    }
+
     public function import(FileRequest $request){
+        $import = new ImportBroker;
         if($request->hasFile('file')){
           $path = $request->file('file')->getRealPath();
-          Excel::import(new ImportBroker,$path);
+          Excel::import($import,$path);
         }
-         return response()->json(['success' => $request->file('file')->getClientOriginalName().' Upload Success' ]);
-        
+        return response()->json(['file' => $request->file('file')->getClientOriginalName(), 'summery' => $import->summery]);
     }
 
     public function export(){

@@ -16,19 +16,27 @@ class ExportBroker implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return Broker::where('user_id', '=', Auth::user()->id)->get();
+        return Broker::select('id','broker_name','broker_email','broker_phone_number')
+        ->where('user_id', '=', Auth::user()->id)
+        ->get();
     }
         
     public function headings(): array
     {
+        // return [
+        //     'Id',
+        //     'User Id',
+        //     'Name',
+        //     'Email',
+        //     'Phone Number',
+        //     'Created Date',
+        //     'Updated Date',
+        // ];
         return [
             'Id',
-            'User Id',
             'Name',
             'Email',
             'Phone Number',
-            'Created Date',
-            'Updated Date',
         ];
     }
 }

@@ -52,6 +52,8 @@ Route::post('editProfile',[ProfileController::class,'update']);
 Route::post('brokerCreateOrUpdate/{broker?}',[BrokerController::class,'createOrUpdate'])->middleware('role_permission:edit_broker|add_broker');
 Route::post('deleteBrokerData/{broker}',[BrokerController::class,'destroy']);
 Route::post('getBrokerData',[BrokerController::class,'getAllBroker']);
+Route::post('deleteBrokerRecords',[BrokerController::class,'deleteBrokerRecords']);
+
 // 
 
 //Role

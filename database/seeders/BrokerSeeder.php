@@ -21,7 +21,7 @@ class BrokerSeeder extends Seeder
                'user_id' => 2,
                 'broker_name' => 'b'.$i,
                 'broker_email' => 'b'.$i.'@gmail.com',
-                'broker_phone_number' => 123456700+$i, 
+                'broker_phone_number' => $i+1234567810, 
             ]);
         }
 

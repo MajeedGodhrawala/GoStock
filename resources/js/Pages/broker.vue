@@ -200,6 +200,21 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col">
+                                            <div
+                                                class="ms-md-auto pe-md-3 d-flex align-items-end"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-info"
+                                                    @click="
+                                                        selectedRecordDelete
+                                                    "
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div
@@ -212,6 +227,20 @@
                                                 >
                                                     <thead>
                                                         <tr>
+                                                            <th>
+                                                                <div
+                                                                    class="form-check"
+                                                                >
+                                                                    <input
+                                                                        class="form-check-input"
+                                                                        name="permission_checkbox"
+                                                                        type="checkbox"
+                                                                        :value="
+                                                                            data.id
+                                                                        "
+                                                                    />
+                                                                </div>
+                                                            </th>
                                                             <th
                                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                                                             >
@@ -254,6 +283,20 @@
                                                             ) in data.brokerData"
                                                             :key="data.id"
                                                         >
+                                                            <td>
+                                                                <div
+                                                                    class="form-check"
+                                                                >
+                                                                    <input
+                                                                        class="form-check-input"
+                                                                        name="delete_records_checkbox"
+                                                                        type="checkbox"
+                                                                        :value="
+                                                                            data.id
+                                                                        "
+                                                                    />
+                                                                </div>
+                                                            </td>
                                                             <td>
                                                                 <p
                                                                     class="text-xs font-weight-bold mb-0"
@@ -514,10 +557,7 @@
                             </div>
                         </div>
                         <br />
-                        <table
-                            v-if="data.importErrors != null"
-                            class="table align-items-center mb-0"
-                        >
+                        <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
                                     <td>Row</td>
@@ -584,6 +624,7 @@ const data = reactive({
     search: "",
     myImportModal: null,
     importErrors: Object,
+    fileUploadSummery: Array,
 });
 const props = defineProps({
     user: Object,
@@ -700,15 +741,33 @@ function uploadFile(e) {
     axios
         .post("uploadCsvFile", formData)
         .then(function (response) {
-            if (response.data.success) {
+            if (response.data.file) {
                 getBrokerData();
                 data.myImportModal.hide();
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: response.data.success,
-                    showConfirmButton: false,
-                    timer: 900,
+                    title: "Upload Success",
+                    html: `<ul class="list-group  justify-content-start">
+                                <li class="list-group-item"><b>File : </b>${response.data.file}</li>
+                                <li class="list-group-item">
+                                    <b>Total Records : </b>${response.data.summery.total_records}
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Create : </b>${response.data.summery.create}
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Update : </b>${response.data.summery.update}
+                                </li>
+                           <ul/>`,
+                    showConfirmButton: true,
+                    timer: false,
+                    didOpen: () => {
+                        const b = Swal.getHtmlContainer().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft();
+                        }, 100);
+                    },
                 });
             }
         })
@@ -718,6 +777,39 @@ function uploadFile(e) {
             } else if (error.message) {
                 errorAlert(error.message);
             }
+        });
+}
+
+function selectedRecordDelete() {
+    var deleteRecords = document.getElementsByName("delete_records_checkbox");
+    let delete_array = [];
+    Object.entries(deleteRecords).forEach(([key, element]) => {
+        if (element.checked) {
+            delete_array.push(element.value);
+        }
+    });
+    axios
+        .post("deleteBrokerRecords", { records: delete_array })
+        .then(function (response) {
+            if (response.data.success) {
+                // data.role_permissions = response.data.role_permissions;
+                // if (response.data.user_permissions) {
+                //     sessionStorage.setItem(
+                //         "user_permissions",
+                //         JSON.stringify(response.data.user_permissions)
+                //     );
+                // }
+                // Swal.fire({
+                //     position: "top-end",
+                //     icon: "success",
+                //     title: response.data.updated,
+                //     showConfirmButton: false,
+                //     timer: 900,
+                // });
+            }
+        })
+        .catch(function (error) {
+            data.errors = error.response.data.errors;
         });
 }
 </script>
