@@ -808,19 +808,19 @@ function selectedRecordDelete() {
     }).then((result) => {
         if (result.isConfirmed) {
             axios
-        .post("deleteBrokerRecords", { records: delete_array })
-        .then(function (response) {
-            if (response.data.success) {
-                document.getElementById("selectAllCheckboxs").checked = false;
-                Swal.fire("Deleted!", response.data.success, "success");
-                getBrokerData();
-            }
-        })
-        .catch(function (error) {
-                    if (error.message) {
-                        errorAlert(error.message);
-                    }
-                });
+            .post("deleteBrokerRecords", { records: delete_array })
+            .then(function (response) {
+                if (response.data.success) {
+                    document.getElementById("selectAllCheckboxs").checked = false;
+                    Swal.fire("Deleted!", response.data.success, "success");
+                    getBrokerData();
+                }
+            })
+            .catch(function (error) {
+                        if (error.message) {
+                            errorAlert(error.message);
+                        }
+                    });
         }
     });
     

@@ -27,13 +27,8 @@ class BrokerController extends Controller
         return Inertia::render('broker',['user' => Auth::user()]);
     }
 
-    public function createOrUpdate($request){
-        if($request->id){
-            $broker = Broker::find($request->id);
-            $broker->update($request->requestedField());
-        } else {
-            Broker::create($request->requestedField());
-        }
+    public function createOrUpdate(BrokerFormRequest $request,Broker $broker){
+        $broker->fill($request->requestedField())->save();
         return response()->json([
             'success' => $request->broker_name.' Is '.($request->id ? 'Updated' : 'Added')]);
     } 

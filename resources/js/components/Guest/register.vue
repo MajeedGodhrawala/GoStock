@@ -400,7 +400,7 @@ const data = reactive({
         first_name: "Majeed",
         last_name: "Godhrawala",
         email: "majeed@gmail.com",
-        phone_number: "1234567890",
+        phone_number: "1234567891",
         password: "12345678",
         confirm_password: "12345678",
         accept_privacy: "",

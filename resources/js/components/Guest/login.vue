@@ -148,7 +148,7 @@ import { reactive } from "vue";
 
 const data = reactive({
     formData: {
-        email_phonenumber: "1234567890",
+        email_phonenumber: "1234567891",
         password: "12345678",
     },
     errors: {},

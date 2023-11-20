@@ -178,18 +178,20 @@
                 >
                     <span
                         class="mr-2 d-none d-lg-inline text-gray-600 small m-1"
-                        >Douglas McGee</span
+                        >{{
+                            data.user.first_name + " " + data.user.last_name
+                        }}</span
                     >
                     <img
                         class="img-profile rounded-circle"
-                        src="img/team-3.jpg"
+                        :src="data.user.profile_img"
                     />
                 </a>
                 <ul
                     class="dropdown-menu dropdown-menu-end px-1 py-2 me-sm-n4"
                     aria-labelledby="dropdownMenuForUserInfo"
                 >
-                    <li class="mb-1">
+                    <li class="mb-1" v-if="has_permission('view_profile')">
                         <Link
                             class="dropdown-item border-radius-md"
                             href="profile"
@@ -276,4 +278,24 @@
 </template>
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
+import { has_permission } from "../../appExternal";
+import { onMounted, reactive } from "vue";
+
+const data = reactive({
+    user: Object,
+});
+
+onMounted(() => {
+    axios
+        .get("userData")
+        .then(function (response) {
+            if (response.data.user) {
+                data.user = response.data.user;
+                console.log(data.user);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
 </script>

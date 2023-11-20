@@ -57,67 +57,6 @@
                         <span class="nav-link-text ms-1">broker</span>
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        href="../pages/billing.html"
-                    >
-                        <div
-                            class="text-white text-center me-2 d-flex align-items-center justify-content-center"
-                        >
-                            <i class="material-icons opacity-10">table_view</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Billing</span>
-                    </Link>
-                </li>
-                <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        id="Link_id"
-                        href="unauthenticatPage"
-                    >
-                        <div
-                            class="text-white text-center me-2 d-flex align-items-center justify-content-center"
-                        >
-                            <i class="material-icons opacity-10">view_in_ar</i>
-                        </div>
-                        <span class="nav-link-text ms-1"
-                            >unauthenticatPage</span
-                        >
-                    </Link>
-                </li>
-                <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        id="Link_id"
-                        href="../pages/rtl.html"
-                    >
-                        <div
-                            class="text-white text-center me-2 d-flex align-items-center justify-content-center"
-                        >
-                            <i class="material-icons opacity-10"
-                                >format_textdirection_r_to_l</i
-                            >
-                        </div>
-                        <span class="nav-link-text ms-1">RTL</span>
-                    </Link>
-                </li>
-                <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        id="Link_id"
-                        href="../pages/notifications.html"
-                    >
-                        <div
-                            class="text-white text-center me-2 d-flex align-items-center justify-content-center"
-                        >
-                            <i class="material-icons opacity-10"
-                                >notifications</i
-                            >
-                        </div>
-                        <span class="nav-link-text ms-1">Notifications</span>
-                    </Link>
-                </li>
                 <li class="nav-item mt-3">
                     <h6
                         class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8"
@@ -163,19 +102,6 @@
                         <span class="nav-link-text ms-1">Permission</span>
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link
-                        class="nav-link text-white"
-                        href="../pages/sign-up.html"
-                    >
-                        <div
-                            class="text-white text-center me-2 d-flex align-items-center justify-content-center"
-                        >
-                            <i class="material-icons opacity-10">assignment</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Sign Up</span>
-                    </Link>
-                </li>
             </ul>
         </div>
         <div class="sidenav-footer position-absolute w-100 bottom-0">
@@ -198,7 +124,7 @@
 </template>
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
-import { onMounted, onUpdated } from "vue";
+import { onMounted } from "vue";
 // import { has_permission } from "../appExternal.js";
 import { has_permission } from "../../appExternal";
 

@@ -27,7 +27,6 @@ class RolePermissions
             array_push($permission_array,$permission);
         }
         $user = Auth::user();
-        // $user = User::find(Auth::user()->id);
         $user->load('role.permissions');
         $has_permission = $user->role->permissions->whereIn('name', $permission_array)->first();
         if($has_permission){

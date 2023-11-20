@@ -47,6 +47,11 @@ class PermissionSeeder extends Seeder
                 'category' => 'Broker'
             ],
             [
+                'name' => 'delete_selected_broker',
+                'display_name' =>  'Delete Selected Broker',
+                'category' => 'Broker'
+            ],
+            [
                 'name' => 'view_profile',
                 'display_name' =>  'View Profile',
                 'category' => 'Profile'
