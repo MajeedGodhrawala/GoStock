@@ -233,11 +233,9 @@
                                                                 >
                                                                     <input
                                                                         class="form-check-input"
-                                                                        name="permission_checkbox"
                                                                         type="checkbox"
-                                                                        :value="
-                                                                            data.id
-                                                                        "
+                                                                        id="selectAllCheckboxs"
+                                                                        @change="selectAllRecord()"
                                                                     />
                                                                 </div>
                                                             </th>
@@ -780,36 +778,51 @@ function uploadFile(e) {
         });
 }
 
+const deleteRecords = document.getElementsByName("delete_records_checkbox");
+
+function selectAllRecord(){
+    Object.entries(deleteRecords).forEach(([key, element]) => {
+        if (element.checked) {
+            element.checked = false;
+        } else {
+            element.checked = true;
+        }
+    });
+}
+
 function selectedRecordDelete() {
-    var deleteRecords = document.getElementsByName("delete_records_checkbox");
     let delete_array = [];
     Object.entries(deleteRecords).forEach(([key, element]) => {
         if (element.checked) {
             delete_array.push(element.value);
         }
     });
-    axios
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do You Want To Delete All Selected Record's",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios
         .post("deleteBrokerRecords", { records: delete_array })
         .then(function (response) {
             if (response.data.success) {
-                // data.role_permissions = response.data.role_permissions;
-                // if (response.data.user_permissions) {
-                //     sessionStorage.setItem(
-                //         "user_permissions",
-                //         JSON.stringify(response.data.user_permissions)
-                //     );
-                // }
-                // Swal.fire({
-                //     position: "top-end",
-                //     icon: "success",
-                //     title: response.data.updated,
-                //     showConfirmButton: false,
-                //     timer: 900,
-                // });
+                document.getElementById("selectAllCheckboxs").checked = false;
+                Swal.fire("Deleted!", response.data.success, "success");
+                getBrokerData();
             }
         })
         .catch(function (error) {
-            data.errors = error.response.data.errors;
-        });
+                    if (error.message) {
+                        errorAlert(error.message);
+                    }
+                });
+        }
+    });
+    
 }
 </script>

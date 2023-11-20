@@ -218,6 +218,8 @@ function submitForm() {
         ? "brokerCreateOrUpdate/" + data.formData.id
         : "brokerCreateOrUpdate";
 
+        console.log(data.formData);
+        console.log(url);
     axios
         .post(url, data.formData)
         .then(function (response) {

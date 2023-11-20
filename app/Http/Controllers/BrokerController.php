@@ -27,7 +27,7 @@ class BrokerController extends Controller
         return Inertia::render('broker',['user' => Auth::user()]);
     }
 
-    public function createOrUpdate(  $request){
+    public function createOrUpdate($request){
         if($request->id){
             $broker = Broker::find($request->id);
             $broker->update($request->requestedField());
@@ -63,14 +63,12 @@ class BrokerController extends Controller
     }
 
     public function deleteBrokerRecords(Request $datas){
-        dd($datas->records);
-        // foreach($datas->records as $key=>$data){
-        //     $broker = Broker::find()
-        //     $Broker->delete();
-        // }
+        foreach($datas->records as $key=>$data){
+            $broker = Broker::find($data);
+            $broker->delete();
+        }
 
-        return response()->json(['updated' => 'Permission Has Been Updated',
-        'role_permissions' => $this->rolePermission(),'user_permissions' => $user_permissions,]);
+        return response()->json(['success' => 'Selected Records Was Deleted']);
     }
 
     public function import(FileRequest $request){
